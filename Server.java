@@ -9,8 +9,8 @@ public class Server {
     private BufferedReader input;
     private PrintWriter output;
 
-    public void main(String[] args) throws IOException {
-        run();
+    public Server(){
+        portNumber = 4999;
     }
 
     public void run() {
