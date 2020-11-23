@@ -9,7 +9,7 @@ public class Server {
     private BufferedReader input;
     private PrintWriter output;
 
-    public Server(){
+    public Server() {
         portNumber = 4999;
     }
 
@@ -46,7 +46,7 @@ public class Server {
         output.flush();
     }
 
-    private void chat(){
+    private void chat() {
         // TODO: create functions to send messages
     }
 
