@@ -47,7 +47,19 @@ public class Server {
     }
 
     private void chat() {
-        // TODO: create functions to send messages
+
+        while (true) {
+            try {
+                String msg = input.readLine();
+                
+                if(msg.length() > 0){
+                    System.out.println(msg);  //TODO output.write
+                }
+            } 
+            catch (IOException e) {
+
+            }
+        }
     }
 
     private void close() throws IOException {
