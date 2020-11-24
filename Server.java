@@ -9,12 +9,14 @@ public class Server {
     private int port;
     private static List<ClientHandler> clients;
     private static int i;
+    private boolean running;
 
     public Server(int port) {
         this.port = port;
 
         // Make an ArrayList to hold all client objects
         clients = Collections.synchronizedList(new ArrayList<ClientHandler>(128));
+        running = true;
         i = 0;
     }
 
@@ -26,7 +28,7 @@ public class Server {
             server = new ServerSocket(port, 100);
             System.out.println("Server started. Waiting for clients...");
 
-            while (true) {
+            while (running) {
                 if(i == 128){
                     System.out.println("Maximum number of clients reached.");
                     break;
@@ -57,5 +59,13 @@ public class Server {
     // Getter
     public static List<ClientHandler> getClients(){
         return clients;
+    }
+
+    public void stop(){
+        running = false;
+        try {
+            server.close();
+        } catch (IOException e) {
+        }
     }
 }

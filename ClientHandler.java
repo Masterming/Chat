@@ -35,17 +35,15 @@ public class ClientHandler implements Runnable {
             try {
                 count = input.read(buffer, 0, 1024);
                 String s = new String(buffer, 0, count);
-                //System.out.println("Client " + id + ": " + s);
+                // System.out.println("Client " + id + ": " + s);
 
-                for (ClientHandler handler : Server.getClients())  
-                { 
-                    // if the recipient is found, write on its 
-                    // output stream 
-                    if (handler.id != this.id)  
-                    { 
+                for (ClientHandler handler : Server.getClients()) {
+                    // if the recipient is found, write on its
+                    // output stream
+                    if (handler.id != this.id) {
                         handler.write("[" + id + "]: " + s);
-                    } 
-                } 
+                    }
+                }
             } catch (IOException e) {
                 // e.printStackTrace();
             }
