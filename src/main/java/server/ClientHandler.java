@@ -1,6 +1,15 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package server;
 import java.io.*;
 import java.net.*;
-
+/**
+ *
+ * @author blech
+ */
 public class ClientHandler implements Runnable {
     private Socket socket;
     private BufferedReader input;
@@ -24,7 +33,7 @@ public class ClientHandler implements Runnable {
         recieve();
         System.out.println("Connection closed");
     }
-
+        // recieve message and share it with all remaining clients
     private void recieve() {
         // blocking
         running = true;
@@ -35,15 +44,17 @@ public class ClientHandler implements Runnable {
             try {
                 count = input.read(buffer, 0, 1024);
                 String s = new String(buffer, 0, count);
-                // System.out.println("Client " + id + ": " + s);
+                //System.out.println("Client " + id + ": " + s);
 
-                for (ClientHandler handler : Server.getClients()) {
-                    // if the recipient is found, write on its
-                    // output stream
-                    if (handler.id != this.id) {
+                for (ClientHandler handler : Server.getClients())  
+                { 
+                    // if the recipient is found, write on its 
+                    // output stream 
+                    if (handler.id != this.id)  
+                    { 
                         handler.write("[" + id + "]: " + s);
-                    }
-                }
+                    } 
+                } 
             } catch (IOException e) {
                 // e.printStackTrace();
             }

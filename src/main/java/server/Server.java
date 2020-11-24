@@ -1,16 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
+/**
+ *
+ * @author blech
+ */
 public class Server {
-
-    private ServerSocket server;
+    
+     private ServerSocket server;
 
     private int port;
     private static List<ClientHandler> clients;
     private static int i;
     private boolean running;
 
+    private SQLSocket sql;
+    
     public Server(int port) {
         this.port = port;
 
@@ -18,6 +29,8 @@ public class Server {
         clients = Collections.synchronizedList(new ArrayList<ClientHandler>(128));
         running = true;
         i = 0;
+        
+        sql = new SQLSocket();
     }
 
     public void run() {
@@ -68,4 +81,5 @@ public class Server {
         } catch (IOException e) {
         }
     }
+    
 }
