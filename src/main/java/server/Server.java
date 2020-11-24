@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src.main.java.server;
+package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -58,14 +58,14 @@ public class Server {
                 output.flush();
 
                 // Create a new handler object for handling this request. 
-                ClientHandler handler = new ClientHandler(socket, input, output, i);
+                ClientHandler handler = new ClientHandler(socket, input, output, i, "Client:"+i);
                 clients.add(handler);
                 Thread t = new Thread(handler);
                 t.start();
             }
         } catch (IOException e) {
             System.out.println("Connection closed");
-            // e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

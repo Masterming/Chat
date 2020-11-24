@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src.main.java.server;
+package server;
 import java.io.*;
 import java.net.*;
 /**
@@ -14,15 +14,25 @@ public class ClientHandler implements Runnable {
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-    public int id;
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    private int id;
+    private String name;
+    
     private boolean running;
 
-    public ClientHandler(Socket s, BufferedReader in, PrintWriter out, int id) {
+    public ClientHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
         this.socket = s;
         this.input = in;
         this.output = out;
         this.id = id;
+        this.name = name;
     }
 
     @Override
@@ -52,7 +62,7 @@ public class ClientHandler implements Runnable {
                     // output stream 
                     if (handler.id != this.id)  
                     { 
-                        handler.write("[" + id + "]: " + s);
+                        handler.write("[" + name + "]: " + s);
                     } 
                 } 
             } catch (IOException e) {
