@@ -65,17 +65,29 @@ public class SQLSocket {
     public boolean login(String un, String pw) {
         String tmp = null;
         try {
-            
+
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select Password from register where name = " + un);
-            while (rs.next()){
-            tmp = rs.getString(1);
+            while (rs.next()) {
+                tmp = rs.getString(1);
             }
-            if(tmp == null)
+            if (tmp == null) {
                 return false;
-            return(tmp.equals(pw));
-                
-                
+            }
+            return (tmp.equals(pw));
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean register(String un, String pw) {
+        try {
+            Statement stmt = con.createStatement();
+            stmt.executeQuery("INSERT INTO `register`(`Name`, `Passwort`) VALUES (" + un + ", " + pw + ")");
+            return true;
+
         } catch (SQLException e) {
             System.out.println(e);
             return false;
