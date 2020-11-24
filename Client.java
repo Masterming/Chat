@@ -21,14 +21,13 @@ public class Client {
         try {
             connect();
             setup();
-            write("Hello server!");
+            // write("Hello server!");
             // scheduleWrite();
             new Thread(() -> recieve()).start();
             new Thread(() -> consoleWrite()).start();
         } catch (IOException e) {
-            System.out.println("Connection closed");
             // e.printStackTrace();
-            running = false;
+            close();
         }
     }
 
@@ -45,7 +44,7 @@ public class Client {
     }
 
     private void write(String msg) {
-        System.out.println("Sent: " + msg);
+        // System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
     }
@@ -64,11 +63,10 @@ public class Client {
         while (running) {
             try {
                 count = input.read(buffer, 0, 1024);
-                System.out.println("Server: " + new String(buffer, 0, count));
+                System.out.println(new String(buffer, 0, count));
             } catch (IOException e) {
-                System.out.println("Connection closed");
                 // e.printStackTrace();
-                running = false;
+                close();
             }
         }
     }
@@ -82,10 +80,21 @@ public class Client {
                 if ((msg = buffer.readLine()) != null)
                     write(msg);
             } catch (IOException e) {
-                System.out.println("Connection closed");
                 // e.printStackTrace();
-                running = false;
+                close();
             }
+        }
+    }
+
+    public void close() {
+        System.out.println("\n Closing connections...");
+        running = false;
+        try {
+            input.close();
+            output.close();
+            socket.close();
+            System.exit(0);
+        } catch (IOException e) {
         }
     }
 }
