@@ -3,61 +3,75 @@ import java.net.*;
 
 public class Server {
 
-    private ServerSocket ss;
-    private int portNumber;
-    private Socket connection;
+    private ServerSocket server;
+
+    private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
+    private boolean running;
 
-    public Server() {
-        portNumber = 4999;
+    private int port;
+
+    public Server(int port) {
+        this.port = port;
     }
 
     public void run() {
         try {
-            ss = new ServerSocket(portNumber, 100);
+            server = new ServerSocket(port, 100);
 
             while (true) {
                 try {
                     connect();
-                    setupStreams();
-                    chat();
-                } catch (EOFException eofException) {
-                    System.out.println("\n Server ended the connection! ");
+                    setup();
+                    write("Hello User!");
+                    recieve();
+                } catch (EOFException e) {
+                    System.out.println("Connection closed");
                 } finally {
                     close();
                 }
             }
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Connection closed");
+            // e.printStackTrace();
+            running = false;
         }
     }
 
     private void connect() throws IOException {
-        System.out.println("Waiting for someone to connect... \n");
-        connection = ss.accept();
-        System.out.println("Now connected to " + connection.getInetAddress().getHostName());
+        System.out.println("Waiting for someone to connect...");
+        socket = server.accept();
+        System.out.println("Now connected to " + socket.getInetAddress().getHostName());
     }
 
-    private void setupStreams() throws IOException {
-        InputStreamReader in = new InputStreamReader(connection.getInputStream());
-        input = new BufferedReader(in);
-        output = new PrintWriter(connection.getOutputStream());
+    private void setup() throws IOException {
+        input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        output.flush();
+        System.out.println("Setup complete\n");
+    }
+
+    private void write(String msg) {
+        System.out.println("Sent: " + msg);
+        output.print(msg);
         output.flush();
     }
 
-    private void chat() {
+    private void recieve() {
+        // blocking
+        running = true;
+        char[] buffer = new char[1024];
+        int count = 0;
 
-        while (true) {
+        while (running) {
             try {
-                String msg = input.readLine();
-                
-                if(msg.length() > 0){
-                    System.out.println(msg);  //TODO output.write
-                }
-            } 
-            catch (IOException e) {
-
+                count = input.read(buffer, 0, 1024);
+                System.out.println("Client: " + new String(buffer, 0, count));
+            } catch (IOException e) {
+                System.out.println("Connection closed");
+                // e.printStackTrace();
+                running = false;
             }
         }
     }
@@ -66,6 +80,6 @@ public class Server {
         System.out.println("\n Closing connections... \n");
         input.close();
         output.close();
-        connection.close();
+        socket.close();
     }
 }
