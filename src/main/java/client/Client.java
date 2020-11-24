@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package client;
+package src.main.java.client;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.*;
