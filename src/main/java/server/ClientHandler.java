@@ -30,6 +30,9 @@ public class ClientHandler implements Runnable {
     public String getName() {
         return name;
     }
+    public boolean getlogged() {
+        return logged;
+    }
     private int id;
     private String name;
 
@@ -52,6 +55,8 @@ public class ClientHandler implements Runnable {
         // write("Hello User!");
         login();
         if (logged) {
+            write("[System]: Currently online: "+onlineUsers().toString());
+            newUserOnline();
             recieve();
         }
         System.out.println("Connection closed");
@@ -85,7 +90,18 @@ public class ClientHandler implements Runnable {
         }
         close();
     }
-
+    
+    private void newUserOnline(){
+        
+        for (ClientHandler handler : Server.getClients()) {
+                    // if the recipient is found, write on its 
+                    // output stream 
+                    if (handler.id != this.id) {
+                        handler.write("[System]:New User online: " + name);
+                    }
+                }
+    }
+    
     private void write(String msg) {
         System.out.println("Sent: " + msg);
         output.print(msg);
@@ -116,13 +132,24 @@ public class ClientHandler implements Runnable {
         password = new String(buffer, 0, count);
 
         if (checkPassword(username, password)) {
-            this.write("Your are logged in.");
+            this.write("Your are logged in.\n");
             this.name = username;
             logged = true;
         } else {
             this.write("Wrong password.\n");
             login();
         }
+    }
+    private List onlineUsers(){
+        
+        List <String> online = new ArrayList<String>();
+        for (ClientHandler handler : Server.getClients()) {
+             
+            if (handler.id != this.id && handler.getlogged()) {
+                online.add(handler.name);
+            }
+        }
+        return online;
     }
 
     public boolean checkPassword(String username, String password) {

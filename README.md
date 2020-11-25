@@ -10,9 +10,9 @@ Der Server sollte mindestens folgende Anforderungen unterstützen:
 - Realisierung eines Anmeldevorgangs, bei dem sich ein Client mit Namen und             // done
  Passwort anmeldet. Sollte der Name noch nicht registriert sein, werden diese Daten
  auf dem Server gespeichert
-- nach einem Anmeldevorgang bekommt der sich gerade angemeldete Client eine             // todo
+- nach einem Anmeldevorgang bekommt der sich gerade angemeldete Client eine             // done
  aktuelle Liste der Namen von bereits angemeldeten Clients gesendet.
-- nach einem Anmeldevorgang erhalten alle bisher angemeldeten Clients                   // todo
+- nach einem Anmeldevorgang erhalten alle bisher angemeldeten Clients                   // done
  weiter eine Meldung, dass sich ein neuer Client angemeldet hat
 # Client:
 Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
@@ -22,4 +22,4 @@ Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
 - Möglichkeit zum Senden von Nachrichten an alle angemeldeten Clients                   // done
 - Nachrichten, welche vom Server gesendet werden zu empfangen und                       // done
  zu visualisieren
-Realisieren Sie die Client-Server-Programme als Konsolen-Anwendung!
+Realisieren Sie die Client-Server-Programme als Konsolen-Anwendung!                     // done
