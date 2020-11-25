@@ -20,7 +20,11 @@ public class Server {
     private static int i;
     private boolean running;
 
-    private SQLSocket sql;
+    private static SQLSocket sql;
+
+    public static SQLSocket getSql() {
+        return sql;
+    }
     
     public Server(int port) {
         this.port = port;

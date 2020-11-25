@@ -8,14 +8,17 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jdk.nashorn.internal.runtime.UserAccessorProperty;
 import server.SQLSocket;
+
 /**
  *
  * @author blech
  */
 public class ClientHandler implements Runnable {
+
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
@@ -29,8 +32,9 @@ public class ClientHandler implements Runnable {
     }
     private int id;
     private String name;
-    
+
     private boolean running;
+    private boolean logged;
 
     public ClientHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
         this.socket = s;
@@ -43,13 +47,19 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         running = true;
+        logged = false;
 
         // write("Hello User!");
         login();
-        recieve();
+        if (logged) {
+            recieve();
+        }
         System.out.println("Connection closed");
+        this.close();
+
     }
-        // recieve message and share it with all remaining clients
+    // recieve message and share it with all remaining clients
+
     private void recieve() {
         // blocking
         running = true;
@@ -62,15 +72,13 @@ public class ClientHandler implements Runnable {
                 String s = new String(buffer, 0, count);
                 //System.out.println("Client " + id + ": " + s);
 
-                for (ClientHandler handler : Server.getClients())  
-                { 
+                for (ClientHandler handler : Server.getClients()) {
                     // if the recipient is found, write on its 
                     // output stream 
-                    if (handler.id != this.id)  
-                    { 
+                    if (handler.id != this.id) {
                         handler.write("[" + name + "]: " + s);
-                    } 
-                } 
+                    }
+                }
             } catch (IOException e) {
                 // e.printStackTrace();
             }
@@ -87,40 +95,57 @@ public class ClientHandler implements Runnable {
     public void login() {
         String password;
         String username;
-        
-        char[] buffer = new char[1024];
+
+        char[] buffer = new char[64];
         int count = 0;
 
         this.write("Enter name: ");
-        count = input.read(buffer, 0, 1024);
+        try {
+            count = input.read(buffer, 0, 64);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         username = new String(buffer, 0, count);
 
         this.write("Enter password: ");
-        count = input.read(buffer, 0, 1024);
+        try {
+            count = input.read(buffer, 0, 64);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         password = new String(buffer, 0, count);
 
-
-        if(checkPassword(username, password)) {
+        if (checkPassword(username, password)) {
             this.write("Your are logged in.");
+            this.name = username;
+            logged = true;
         } else {
-            this.write("Wrong password.");
-            this.close();
+            this.write("Wrong password.\n");
+            login();
         }
     }
 
-    public boolean checkPassword(String username, String password){
-        if(SQLSocket.login(username, password)){
+    public boolean checkPassword(String username, String password) {
+
+        boolean name_found = false;
+        if (Server.getSql().login(username, password)) {
             return true;
         } else {
-            for(String name : SQLSocket.getUsers()) {
-                if(username == name) {
-                    return false;
-                } else {
-                    SQLSocket.register(username, password);
-                    return true;
+            for (String name : Server.getSql().getUsers()) {
+                if (username.equals(name)) {
+                    name_found = true;
                 }
             }
+            if (!name_found) {
+                Server.getSql().register(username, password);
+                this.write("registered as: " + username+"\n");
+                return true;
+            } else {
+                return false;
+
+            }
         }
+
     }
 
     public void close() {

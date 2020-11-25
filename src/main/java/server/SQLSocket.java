@@ -67,7 +67,8 @@ public class SQLSocket {
         try {
 
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select Password from register where name = " + un);
+            ResultSet rs = stmt.executeQuery("select Password from register where name = \"" + un+"\"");
+                                                                                                  
             while (rs.next()) {
                 tmp = rs.getString(1);
             }
@@ -80,12 +81,13 @@ public class SQLSocket {
             System.out.println(e);
             return false;
         }
+        
     }
 
     public boolean register(String un, String pw) {
         try {
             Statement stmt = con.createStatement();
-            stmt.executeQuery("INSERT INTO `register`(`Name`, `Passwort`) VALUES (" + un + ", " + pw + ")");
+            stmt.executeUpdate("INSERT INTO `register`(`Name`, `Password`) VALUES (\"" + un + "\", \"" + pw + "\")");
             return true;
 
         } catch (SQLException e) {

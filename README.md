@@ -5,9 +5,9 @@ Der Server sollte mindestens folgende Anforderungen unterstützen:
  ermöglicht, sich anzumelden
  - Realisierung eines Nachrichten-Listener, welcher die Voraussetzung                   // done
  für den Nachrichtenaustausch zwischen Clients schafft
- - die Möglichkeit, Namen und dazugehörige Passwörter zu speichern                      // done, sobald anmeldemaske die funktion called
+ - die Möglichkeit, Namen und dazugehörige Passwörter zu speichern                      // done
  und zu verwalten – solange der Server läuft
-- Realisierung eines Anmeldevorgangs, bei dem sich ein Client mit Namen und             // todo
+- Realisierung eines Anmeldevorgangs, bei dem sich ein Client mit Namen und             // done
  Passwort anmeldet. Sollte der Name noch nicht registriert sein, werden diese Daten
  auf dem Server gespeichert
 - nach einem Anmeldevorgang bekommt der sich gerade angemeldete Client eine             // todo
@@ -17,7 +17,7 @@ Der Server sollte mindestens folgende Anforderungen unterstützen:
 # Client:
 Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
 - Möglichkeit zum Aufbau und Trennen einer Verbindung zum Server                        // done
-- Weitergabe einer Eingabemaske mit Name und Passwort um sich beim                      // todo
+- Weitergabe einer Eingabemaske mit Name und Passwort um sich beim                      // done
  Server anzumelden
 - Möglichkeit zum Senden von Nachrichten an alle angemeldeten Clients                   // done
 - Nachrichten, welche vom Server gesendet werden zu empfangen und                       // done
