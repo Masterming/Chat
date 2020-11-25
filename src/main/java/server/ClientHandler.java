@@ -111,7 +111,7 @@ public class ClientHandler implements Runnable {
     public void login() {
         String password;
         String username;
-
+        
         char[] buffer = new char[64];
         int count = 0;
 
@@ -122,7 +122,8 @@ public class ClientHandler implements Runnable {
             ex.printStackTrace();
         }
         username = new String(buffer, 0, count);
-
+        username = username.toLowerCase();
+        
         this.write("Enter password: ");
         try {
             count = input.read(buffer, 0, 64);
@@ -130,7 +131,7 @@ public class ClientHandler implements Runnable {
             ex.printStackTrace();
         }
         password = new String(buffer, 0, count);
-
+        
         if (checkPassword(username, password)) {
             this.write("Your are logged in.\n");
             this.name = username;
