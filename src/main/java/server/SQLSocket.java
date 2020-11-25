@@ -62,7 +62,7 @@ public class SQLSocket {
         return l;
     }
 
-    public static boolean login(String un, String pw) {
+    public boolean login(String un, String pw) {
         String tmp = null;
         try {
 
