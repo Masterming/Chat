@@ -4,8 +4,13 @@
  * and open the template in the editor.
  */
 package server;
+
 import java.io.*;
 import java.net.*;
+import java.util.*;
+
+import jdk.nashorn.internal.runtime.UserAccessorProperty;
+import server.SQLSocket;
 /**
  *
  * @author blech
@@ -40,6 +45,7 @@ public class ClientHandler implements Runnable {
         running = true;
 
         // write("Hello User!");
+        login();
         recieve();
         System.out.println("Connection closed");
     }
@@ -76,6 +82,45 @@ public class ClientHandler implements Runnable {
         System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
+    }
+
+    public void login() {
+        String password;
+        String username;
+        
+        char[] buffer = new char[1024];
+        int count = 0;
+
+        this.write("Enter name: ");
+        count = input.read(buffer, 0, 1024);
+        username = new String(buffer, 0, count);
+
+        this.write("Enter password: ");
+        count = input.read(buffer, 0, 1024);
+        password = new String(buffer, 0, count);
+
+
+        if(checkPassword(username, password)) {
+            this.write("Your are logged in.");
+        } else {
+            this.write("Wrong password.");
+            this.close();
+        }
+    }
+
+    public boolean checkPassword(String username, String password){
+        if(SQLSocket.login(username, password)){
+            return true;
+        } else {
+            for(String name : SQLSocket.getUsers()) {
+                if(username == name) {
+                    return false;
+                } else {
+                    SQLSocket.register(username, password);
+                    return true;
+                }
+            }
+        }
     }
 
     public void close() {
