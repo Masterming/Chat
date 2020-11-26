@@ -16,3 +16,4 @@ Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
 - Weitergabe einer Eingabemaske mit Name und Passwort um sich beim Server anzumelden
 - Möglichkeit zum Senden von Nachrichten an alle angemeldeten Clients 
 - Nachrichten, welche vom Server gesendet werden zu empfangen und zu visualisieren
+
