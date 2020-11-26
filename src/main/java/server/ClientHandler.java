@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.io.*;
@@ -14,8 +9,7 @@ import java.util.logging.Logger;
 import server.SQLSocket;
 
 /**
- *
- * @author blech
+ * @author blechner
  */
 public class ClientHandler implements Runnable {
 
@@ -30,9 +24,11 @@ public class ClientHandler implements Runnable {
     public String getName() {
         return name;
     }
+
     public boolean getlogged() {
         return logged;
     }
+
     private int id;
     private String name;
 
@@ -55,7 +51,7 @@ public class ClientHandler implements Runnable {
         // write("Hello User!");
         login();
         if (logged) {
-            write("[System]: Currently online: "+onlineUsers().toString());
+            write("[System]: Currently online: " + onlineUsers().toString());
             newUserOnline();
             recieve();
         }
@@ -75,11 +71,11 @@ public class ClientHandler implements Runnable {
             try {
                 count = input.read(buffer, 0, 1024);
                 String s = new String(buffer, 0, count);
-                //System.out.println("Client " + id + ": " + s);
+                // System.out.println("Client " + id + ": " + s);
 
                 for (ClientHandler handler : Server.getClients()) {
-                    // if the recipient is found, write on its 
-                    // output stream 
+                    // if the recipient is found, write on its
+                    // output stream
                     if (handler.id != this.id) {
                         handler.write("[" + name + "]: " + s);
                     }
@@ -90,18 +86,18 @@ public class ClientHandler implements Runnable {
         }
         close();
     }
-    
-    private void newUserOnline(){
-        
+
+    private void newUserOnline() {
+
         for (ClientHandler handler : Server.getClients()) {
-                    // if the recipient is found, write on its 
-                    // output stream 
-                    if (handler.id != this.id) {
-                        handler.write("[System]:New User online: " + name);
-                    }
-                }
+            // if the recipient is found, write on its
+            // output stream
+            if (handler.id != this.id) {
+                handler.write("[System]:New User online: " + name);
+            }
+        }
     }
-    
+
     private void write(String msg) {
         System.out.println("Sent: " + msg);
         output.print(msg);
@@ -111,7 +107,7 @@ public class ClientHandler implements Runnable {
     public void login() {
         String password;
         String username;
-        
+
         char[] buffer = new char[64];
         int count = 0;
 
@@ -123,7 +119,7 @@ public class ClientHandler implements Runnable {
         }
         username = new String(buffer, 0, count);
         username = username.toLowerCase();
-        
+
         this.write("Enter password: ");
         try {
             count = input.read(buffer, 0, 64);
@@ -131,7 +127,7 @@ public class ClientHandler implements Runnable {
             ex.printStackTrace();
         }
         password = new String(buffer, 0, count);
-        
+
         if (checkPassword(username, password)) {
             this.write("Your are logged in.\n");
             this.name = username;
@@ -141,11 +137,12 @@ public class ClientHandler implements Runnable {
             login();
         }
     }
-    private List onlineUsers(){
-        
-        List <String> online = new ArrayList<String>();
+
+    private List onlineUsers() {
+
+        List<String> online = new ArrayList<String>();
         for (ClientHandler handler : Server.getClients()) {
-             
+
             if (handler.id != this.id && handler.getlogged()) {
                 online.add(handler.name);
             }
@@ -166,7 +163,7 @@ public class ClientHandler implements Runnable {
             }
             if (!name_found) {
                 Server.getSql().register(username, password);
-                this.write("registered as: " + username+"\n");
+                this.write("registered as: " + username + "\n");
                 return true;
             } else {
                 return false;

@@ -1,6 +1,0 @@
-client\Client.class
-server\Servertest.class
-client\Clienttest.class
-server\Server.class
-server\SQLSocket.class
-server\ClientHandler.class

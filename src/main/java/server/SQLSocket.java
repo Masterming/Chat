@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.sql.*;
 import java.util.*;
 
 /**
- *
- * @author blech
+ * @author blechner
  */
 public class SQLSocket {
 
@@ -23,8 +17,7 @@ public class SQLSocket {
             System.out.println("MYSQL-Driver not found");
         }
         try {
-            con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/DB", "root", "");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB", "root", "");
         } catch (SQLException e) {
             System.out.println("connection failed:" + e.getMessage());
         }
@@ -67,8 +60,8 @@ public class SQLSocket {
         try {
 
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select Password from register where name = \"" + un+"\"");
-                                                                                                  
+            ResultSet rs = stmt.executeQuery("select Password from register where name = \"" + un + "\"");
+
             while (rs.next()) {
                 tmp = rs.getString(1);
             }
@@ -81,7 +74,7 @@ public class SQLSocket {
             System.out.println(e);
             return false;
         }
-        
+
     }
 
     public boolean register(String un, String pw) {

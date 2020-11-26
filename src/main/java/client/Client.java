@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package client;
+
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.*;
+
 /**
- *
- * @author blech
+ * @author blechner
  */
 public class Client {
     private Socket socket;
@@ -55,11 +51,6 @@ public class Client {
         // System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
-    }
-
-    private void scheduleWrite() {
-        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> write("Message"), 0, 5, TimeUnit.SECONDS);
     }
 
     private void recieve() {
