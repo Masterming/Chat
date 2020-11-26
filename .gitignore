@@ -10,6 +10,15 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
+# IntelliJ project files 
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# Maven 
+target/
+
 # Class Files #
 *.class
 
@@ -31,3 +40,9 @@ nb-configuration.xml
 *.DS_Store
 *.lock
 *.ctxt
+
+# Misc
+*.swp
+release.properties
+pom.xml.releaseBackup
+pom.xml.tag

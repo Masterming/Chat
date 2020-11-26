@@ -3,10 +3,6 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import server.SQLSocket;
 
 /**
  * @author blechner
@@ -17,19 +13,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader input;
     private PrintWriter output;
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean getlogged() {
-        return logged;
-    }
-
-    private int id;
+    private final int id;
     private String name;
 
     private boolean running;
@@ -48,14 +32,12 @@ public class ClientHandler implements Runnable {
         running = true;
         logged = false;
 
-        // write("Hello User!");
         login();
         if (logged) {
-            write("[System]: Currently online: " + onlineUsers().toString());
-            newUserOnline();
+            printActive();
+            printNew();
             recieve();
         }
-        System.out.println("Connection closed");
         this.close();
 
     }
@@ -65,7 +47,7 @@ public class ClientHandler implements Runnable {
         // blocking
         running = true;
         char[] buffer = new char[1024];
-        int count = 0;
+        int count;
 
         while (running) {
             try {
@@ -74,32 +56,20 @@ public class ClientHandler implements Runnable {
                 // System.out.println("Client " + id + ": " + s);
 
                 for (ClientHandler handler : Server.getClients()) {
-                    // if the recipient is found, write on its
-                    // output stream
                     if (handler.id != this.id) {
-                        handler.write("[" + name + "]: " + s);
+                        handler.write("[" + name + "]: " + s +"\n");
                     }
                 }
             } catch (IOException e) {
-                // e.printStackTrace();
+                // System.out.println(e.getMessage());
+                close();
             }
         }
         close();
     }
 
-    private void newUserOnline() {
-
-        for (ClientHandler handler : Server.getClients()) {
-            // if the recipient is found, write on its
-            // output stream
-            if (handler.id != this.id) {
-                handler.write("[System]:New User online: " + name);
-            }
-        }
-    }
-
     private void write(String msg) {
-        System.out.println("Sent: " + msg);
+        // System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
     }
@@ -108,79 +78,89 @@ public class ClientHandler implements Runnable {
         String password;
         String username;
 
-        char[] buffer = new char[64];
-        int count = 0;
+        char[] buffer = new char[1024];
+        int count;
 
-        this.write("Enter name: ");
         try {
-            count = input.read(buffer, 0, 64);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        username = new String(buffer, 0, count);
-        username = username.toLowerCase();
+            write("Enter name: ");
+            count = input.read(buffer, 0, 1024);
+            username = new String(buffer, 0, count);
+            username = username.toLowerCase();
+            username = username.replaceAll("[^(a-z)]", "");
+            
+            write("Enter password: ");
+            count = input.read(buffer, 0, 1024);
+            password = new String(buffer, 0, count);
+            username = username.replaceAll("[^(A-z)]", "");
 
-        this.write("Enter password: ");
-        try {
-            count = input.read(buffer, 0, 64);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        password = new String(buffer, 0, count);
-
-        if (checkPassword(username, password)) {
-            this.write("Your are logged in.\n");
-            this.name = username;
-            logged = true;
-        } else {
-            this.write("Wrong password.\n");
-            login();
-        }
-    }
-
-    private List onlineUsers() {
-
-        List<String> online = new ArrayList<String>();
-        for (ClientHandler handler : Server.getClients()) {
-
-            if (handler.id != this.id && handler.getlogged()) {
-                online.add(handler.name);
+            if (checkPassword(username, password)) {
+                name = username;
+                logged = true;
+            } else {
+                write("Wrong password.\n");
+                login();
             }
+
+        } catch (IOException e) {
+            // System.out.println(e.getMessage());
+            close();
         }
-        return online;
     }
 
     public boolean checkPassword(String username, String password) {
-
         boolean name_found = false;
-        if (Server.getSql().login(username, password)) {
-            return true;
-        } else {
-            for (String name : Server.getSql().getUsers()) {
-                if (username.equals(name)) {
-                    name_found = true;
-                }
-            }
-            if (!name_found) {
-                Server.getSql().register(username, password);
-                this.write("registered as: " + username + "\n");
-                return true;
-            } else {
-                return false;
 
+        // check if username exists
+        for (String un : Server.getSql().getAllUser()) {
+            if (username.equals(un)) {
+                name_found = true;
+                break;
             }
         }
 
+        // register new user
+        if (!name_found) {
+            Server.getSql().register(username, password);
+            this.write("registered as: " + username + "\n");
+            return true;
+        }
+
+        // log in existing user
+        return Server.getSql().login(username, password);
+    }
+
+    private void printActive() {
+        List<String> active = new ArrayList<>();
+        for (ClientHandler handler : Server.getClients()) {
+            // Only show users, who are connected and logged in
+            if (handler.id != this.id && handler.logged) {
+                active.add(handler.name);
+            }
+        }
+        write("[System]: Currently online: " + active.toString() + "\n");
+        // write("-------------------------------------------------------------\n\n");
+    }
+
+    private void printNew() {
+        for (ClientHandler handler : Server.getClients()) {
+            // Only show to users, who are connected and logged in
+            if (handler.id != this.id && handler.logged) {
+                handler.write("[System]: " + name + " connected\n");
+            }
+        }
     }
 
     public void close() {
-        System.out.println("\n Closing connections... \n");
-        running = false;
-        try {
-            input.close();
-            output.close();
-            socket.close();
-        } catch (IOException e) {
+        if (running) {
+            running = false;
+            try {
+                input.close();
+                output.close();
+                socket.close();
+            } catch (IOException e) {
+                // System.out.println(e.getMessage());
+            }
+            System.out.println("Connection closed");
         }
     }
 }

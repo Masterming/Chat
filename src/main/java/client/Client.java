@@ -2,7 +2,6 @@ package client;
 
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.*;
 
 /**
  * @author blechner
@@ -13,8 +12,8 @@ public class Client {
     private PrintWriter output;
     private boolean running;
 
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
 
     public Client(String ip, int port) {
         this.ip = ip;
@@ -25,12 +24,9 @@ public class Client {
         try {
             connect();
             setup();
-            // write("Hello server!");
-            // scheduleWrite();
             new Thread(() -> recieve()).start();
             new Thread(() -> consoleWrite()).start();
         } catch (IOException e) {
-            // e.printStackTrace();
             close();
         }
     }
@@ -44,27 +40,25 @@ public class Client {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         output.flush();
-        System.out.println("Setup complete\n");
+        // System.out.println("Stream Setup complete.");
     }
 
     private void write(String msg) {
-        // System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
+        // System.out.println(msg);
     }
 
     private void recieve() {
-        // blocking
         running = true;
-        char[] buffer = new char[1024];
-        int count = 0;
 
         while (running) {
+            char[] buffer = new char[1024];
             try {
-                count = input.read(buffer, 0, 1024);
-                System.out.println(new String(buffer, 0, count));
+                input.read(buffer, 0, 1024); // blocking
+                System.out.print(String.valueOf(buffer));
+                //System.out.flush();
             } catch (IOException e) {
-                // e.printStackTrace();
                 close();
             }
         }
@@ -79,14 +73,13 @@ public class Client {
                 if ((msg = buffer.readLine()) != null)
                     write(msg);
             } catch (IOException e) {
-                // e.printStackTrace();
                 close();
             }
         }
     }
 
     public void close() {
-        System.out.println("\n Closing connections...");
+        System.out.println("\n The server disconneted...");
         running = false;
         try {
             input.close();
@@ -94,6 +87,7 @@ public class Client {
             socket.close();
             System.exit(0);
         } catch (IOException e) {
+            System.exit(1);
         }
     }
 }

@@ -11,10 +11,10 @@ public class Server {
 
     private ServerSocket server;
 
-    private int port;
+    private final int port;
+    private boolean running;
     private static List<ClientHandler> clients;
     private static int i;
-    private boolean running;
 
     private static SQLSocket sql;
 
@@ -26,7 +26,7 @@ public class Server {
         this.port = port;
 
         // Make an ArrayList to hold all client objects
-        clients = Collections.synchronizedList(new ArrayList<ClientHandler>(128));
+        clients = Collections.synchronizedList(new ArrayList<>(128));
         running = true;
         i = 0;
 
@@ -35,11 +35,19 @@ public class Server {
 
     public void run() {
         try {
+            server = new ServerSocket(port, 100);
+            System.out.println("Server started. Waiting for clients...");
+            new Thread(() -> AcceptClientsAsync()).start();
+        } catch (IOException e) {
+            System.out.println("Failed to start the sever: " + e.getMessage());
+        }
+    }
+
+    private void AcceptClientsAsync() {
+        try {
             Socket socket;
             BufferedReader input;
             PrintWriter output;
-            server = new ServerSocket(port, 100);
-            System.out.println("Server started. Waiting for clients...");
 
             while (running) {
                 if (i == 128) {
@@ -50,7 +58,7 @@ public class Server {
 
                 // Connect with client
                 socket = server.accept();
-                System.out.println("Connected to " + socket.getInetAddress().getHostName() + "(i=" + i + ")");
+                //System.out.println("Connected to " + socket.getInetAddress().getHostName() + "(i=" + i + ")");
 
                 // Setup streams with client
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -58,16 +66,16 @@ public class Server {
                 output.flush();
 
                 // Create a new handler object for handling this request.
-                ClientHandler handler = new ClientHandler(socket, input, output, i, "Client:" + i); // todo : client + i
-                                                                                                    // ==> name
+                ClientHandler handler = new ClientHandler(socket, input, output, i, "Client" + i);
+
                 clients.add(handler);
                 Thread t = new Thread(handler);
                 t.start();
             }
         } catch (IOException e) {
-            System.out.println("Connection closed");
-            e.printStackTrace();
+            stop();
         }
+
     }
 
     // Getter
@@ -76,11 +84,15 @@ public class Server {
     }
 
     public void stop() {
-        running = false;
-        try {
-            server.close();
-        } catch (IOException e) {
+        if (running) {
+            running = false;
+            try {
+                server.close();
+                System.exit(0);
+            } catch (IOException e) {
+                System.exit(1);
+            }
+            System.out.println("Server closed");
         }
     }
-
 }
