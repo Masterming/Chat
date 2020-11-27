@@ -17,3 +17,6 @@ Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
 - Möglichkeit zum Senden von Nachrichten an alle angemeldeten Clients 
 - Nachrichten, welche vom Server gesendet werden zu empfangen und zu visualisieren
 
+# features die sinnvoll gewesen wären:
+- prüfung von doppelter anmeldung
+- möglichkeit des clienten selber die verbindung sauber zu trennen
