@@ -58,7 +58,8 @@ public class Server {
 
                 // Connect with client
                 socket = server.accept();
-                //System.out.println("Connected to " + socket.getInetAddress().getHostName() + "(i=" + i + ")");
+                // System.out.println("Connected to " + socket.getInetAddress().getHostName() +
+                // "(i=" + i + ")");
 
                 // Setup streams with client
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -89,7 +90,7 @@ public class Server {
             try {
                 server.close();
                 System.exit(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.exit(1);
             }
             System.out.println("Server closed");

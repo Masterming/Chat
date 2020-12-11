@@ -57,7 +57,7 @@ public class ClientHandler implements Runnable {
 
                 for (ClientHandler handler : Server.getClients()) {
                     if (handler.id != this.id) {
-                        handler.write("[" + name + "]: " + s +"\n");
+                        handler.write("[" + name + "]: " + s + "\n");
                     }
                 }
             } catch (IOException e) {
@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable {
             username = new String(buffer, 0, count);
             username = username.toLowerCase();
             username = username.replaceAll("[^(a-z)]", "");
-            
+
             write("Enter password: ");
             count = input.read(buffer, 0, 1024);
             password = new String(buffer, 0, count);

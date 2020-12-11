@@ -12,17 +12,16 @@ public class SQLSocket {
 
     public SQLSocket() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("MYSQL-Driver not found");
             return;
         }
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB", "root", "");
-            //System.out.println("connected to sqlsocket");
+            // System.out.println("connected to sqlsocket");
         } catch (SQLException e) {
             System.out.println("connection to sqlsocket failed:" + e.getMessage());
-            return;
         }
     }
 

@@ -57,7 +57,7 @@ public class Client {
             try {
                 input.read(buffer, 0, 1024); // blocking
                 System.out.print(String.valueOf(buffer));
-                //System.out.flush();
+                // System.out.flush();
             } catch (IOException e) {
                 close();
             }
