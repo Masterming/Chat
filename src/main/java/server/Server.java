@@ -3,11 +3,14 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * @author blechner
  */
 public class Server {
+
+    private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
     private ServerSocket server;
 

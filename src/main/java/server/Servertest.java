@@ -1,13 +1,25 @@
 package server;
 
 import java.io.IOException;
+import java.util.logging.*;
 
 /**
  * @author blechner
  */
 public class Servertest {
 
+    private final static Logger LOGGER = Logger.getLogger(Servertest.class.getName());
+
     public static void main(String[] args) {
+        // Custom logging
+        try {
+            ExtendedLogger.disableConsole();
+            ExtendedLogger.enableHtml();
+            ExtendedLogger.setDebugLevel(Level.INFO); // SEVERE or INFO
+        } catch (IOException ex) {
+            LOGGER.warning(ex.getLocalizedMessage());
+        }
+
         Server server = new Server(4999);
         server.run();
 
@@ -28,7 +40,7 @@ public class Servertest {
 
         test.setUsers(user);
         test.setInformationRoom(3, "Testraum", 45, true);
-        
+
         System.out.println("Press enter to exit ...");
         try {
             System.in.read();
