@@ -39,10 +39,10 @@ public class Server {
     public void run() {
         try {
             server = new ServerSocket(port, 100);
-            System.out.println("Server started. Waiting for clients...");
+            LOGGER.log(Level.INFO, "Server started. Waiting for clients...");
             new Thread(() -> AcceptClientsAsync()).start();
         } catch (IOException e) {
-            System.out.println("Failed to start the sever: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to start the sever: " + e.getMessage());
         }
     }
 
@@ -54,14 +54,14 @@ public class Server {
 
             while (running) {
                 if (i == 128) {
-                    System.out.println("Maximum number of clients reached.");
+                    LOGGER.log(Level.WARNING, "Maximum number of clients reached.");
                     break;
                 }
                 i++;
 
                 // Connect with client
                 socket = server.accept();
-                // System.out.println("Connected to " + socket.getInetAddress().getHostName() +
+                // LOGGER.log(Level.INFO, "Connected to " + socket.getInetAddress().getHostName() +
                 // "(i=" + i + ")");
 
                 // Setup streams with client
@@ -92,11 +92,12 @@ public class Server {
             running = false;
             try {
                 server.close();
+                LOGGER.log(Level.INFO, "Server closed");
                 System.exit(0);
             } catch (Exception e) {
                 System.exit(1);
             }
-            System.out.println("Server closed");
+            
         }
     }
 }

@@ -28,7 +28,7 @@ public class ClientGUI implements ActionListener {
     private JList rooms;
 
     public ClientGUI(){
-
+        
         frame = new JFrame();
         panel = new JPanel(new BorderLayout());
         chatPanel = new JPanel(new BorderLayout());

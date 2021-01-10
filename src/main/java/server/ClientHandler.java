@@ -3,11 +3,14 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * @author blechner
  */
 public class ClientHandler implements Runnable {
+
+    private final static Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 
     private Socket socket;
     private BufferedReader input;
@@ -15,6 +18,7 @@ public class ClientHandler implements Runnable {
 
     private final int id;
     private String name;
+    private Room room;
 
     private boolean running;
     private boolean logged;
@@ -53,7 +57,7 @@ public class ClientHandler implements Runnable {
             try {
                 count = input.read(buffer, 0, 1024);
                 String s = new String(buffer, 0, count);
-                // System.out.println("Client " + id + ": " + s);
+                LOGGER.log(Level.INFO, "Client " + id + ": " + s);
 
                 for (ClientHandler handler : Server.getClients()) {
                     if (handler.id != this.id) {
@@ -61,7 +65,7 @@ public class ClientHandler implements Runnable {
                     }
                 }
             } catch (IOException e) {
-                // System.out.println(e.getMessage());
+                LOGGER.log(Level.SEVERE, e.getMessage());
                 close();
             }
         }
@@ -69,7 +73,6 @@ public class ClientHandler implements Runnable {
     }
 
     private void write(String msg) {
-        // System.out.println("Sent: " + msg);
         output.print(msg);
         output.flush();
     }
@@ -91,7 +94,7 @@ public class ClientHandler implements Runnable {
             write("Enter password: ");
             count = input.read(buffer, 0, 1024);
             password = new String(buffer, 0, count);
-            username = username.replaceAll("[^(A-z)]", "");
+            password = password.replaceAll("[^(A-z)]", "");
 
             if (checkPassword(username, password)) {
                 name = username;
@@ -102,7 +105,7 @@ public class ClientHandler implements Runnable {
             }
 
         } catch (IOException e) {
-            // System.out.println(e.getMessage());
+             LOGGER.log(Level.SEVERE, e.getMessage());
             close();
         }
     }
@@ -146,6 +149,7 @@ public class ClientHandler implements Runnable {
             // Only show to users, who are connected and logged in
             if (handler.id != this.id && handler.logged) {
                 handler.write("[System]: " + name + " connected\n");
+                LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
             }
         }
     }
@@ -158,9 +162,9 @@ public class ClientHandler implements Runnable {
                 output.close();
                 socket.close();
             } catch (IOException e) {
-                // System.out.println(e.getMessage());
+                 LOGGER.log(Level.SEVERE, e.getMessage());
             }
-            System.out.println("Connection closed");
+            LOGGER.log(Level.INFO, "Connection closed");
         }
     }
 }

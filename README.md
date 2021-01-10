@@ -26,9 +26,9 @@ Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
 - Gestaltung einer Kommunikationsoberfläche zur Visualisierung aller Aktivitäten nach
 dem Starten des Servers bis zum Beenden im Bezug auf Verbindung, Kommunikation
 und Verwaltung
-– außerdem sollen diese Ereignisse in einer Datei protokolliert werden (siehe Anhang 1)
+– außerdem sollen diese Ereignisse in einer Datei protokolliert werden (siehe Anhang 1)                                                                     //DONE
 - Weiterentwicklung des Einraum-Systems zu einem Mehrraum-System
-- Optimierung der Benutzerkontenverwaltung durch eine dauerhafte Speicherung der Daten auf der Festplatte und der Möglichkeit, diese Datensätze anzuzeigen
+- Optimierung der Benutzerkontenverwaltung durch eine dauerhafte Speicherung der Daten auf der Festplatte und der Möglichkeit, diese Datensätze anzuzeigen  //DONE
 - Bereitstellung von Methoden zur Verwaltung von Räumen (Erstellen, Editieren, Löschen)
 - Bereitstellung von Methoden zur Verwaltung von Benutzern (Verwarnen, Kick, Ban)
 - prüfung von doppelter anmeldung
