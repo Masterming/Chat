@@ -1,0 +1,22 @@
+logger -> chat append in servergui
+
+arraylist für rooms -> gui raumliste
+server/clientgui  clientlist 
+benutzerliste -> onclick -> informationsfeld -> name, id, etc.
+
+clientgui -> button unter raumliste für join
+
+serveraktionen: aktionen in pop-up fenster
+
+raum erstellen -> name (textfeld), editierbar (checkbox), bestätigen(button)
+raum löschen -> raumliste (jlist), bestätigen(button)
+raum editieren -> raumliste(if(editierbar)), new_name (textfeld), bestätigen(button)
+benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(button)
+benutzer kicken -> benutzerliste, bestätigen(button)
+    |->force-ausloggen
+benutzer bannen -> benutzerliste, bestätigen(button)
+    |->in DB boolean banned hinzufügen und bei benutzerban auf true setzen -> loginmethode banned checken lassen
+
+extras:
+serverseitige grundstruktur an räumen 
+    externe xml-file

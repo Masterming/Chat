@@ -60,8 +60,10 @@ public class ClientHandler implements Runnable {
                 LOGGER.log(Level.INFO, "Client " + id + ": " + s);
 
                 for (ClientHandler handler : Server.getClients()) {
-                    if (handler.id != this.id) {
-                        handler.write("[" + name + "]: " + s + "\n");
+                    if (handler.room.getId() == this.room.getId()) {
+                        if (handler.id != this.id) {
+                            handler.write("[" + name + "]: " + s + "\n");
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -105,7 +107,7 @@ public class ClientHandler implements Runnable {
             }
 
         } catch (IOException e) {
-             LOGGER.log(Level.SEVERE, e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
             close();
         }
     }
@@ -162,7 +164,7 @@ public class ClientHandler implements Runnable {
                 output.close();
                 socket.close();
             } catch (IOException e) {
-                 LOGGER.log(Level.SEVERE, e.getMessage());
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
             LOGGER.log(Level.INFO, "Connection closed");
         }
