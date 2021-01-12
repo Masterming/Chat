@@ -75,7 +75,7 @@ public class ClientGUI implements ActionListener {
         join.addActionListener(this);
 
         //Information
-        information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
+        information.setLayout(new GridLayout(2,2));
         information.add(server);
         information.add(port);
         information.add(name);
@@ -148,4 +148,3 @@ public class ClientGUI implements ActionListener {
         }
     }
 }
-
