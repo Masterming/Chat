@@ -18,6 +18,7 @@ public class ClientGUI implements ActionListener {
     private JPanel status;
     private JPanel information;
     private JLabel server;
+    private JLabel port;
     private JLabel name;
     private TextArea chat;
     private JPanel message;
@@ -26,9 +27,11 @@ public class ClientGUI implements ActionListener {
     private JTabbedPane statusAuswahl;
     private JList users;
     private JList rooms;
+    private JButton join;
+    private JPanel roomWbutton;
 
     public ClientGUI(){
-        
+
         frame = new JFrame();
         panel = new JPanel(new BorderLayout());
         chatPanel = new JPanel(new BorderLayout());
@@ -36,6 +39,7 @@ public class ClientGUI implements ActionListener {
         status = new JPanel();
         information = new JPanel();
         server = new JLabel();
+        port = new JLabel();
         name = new JLabel();
         chat = new TextArea();
         text = new JTextField();
@@ -44,9 +48,12 @@ public class ClientGUI implements ActionListener {
         statusAuswahl = new JTabbedPane();
         rooms = new JList();
         users = new JList();
+        join = new JButton("Beitreten");
+        roomWbutton = new JPanel(new BorderLayout());
 
         //Chatfenster
         chat.setEditable(false);
+        send.addActionListener(this);
         message.setLayout(new BorderLayout());
         message.add(text, BorderLayout.CENTER);
         message.add(send, BorderLayout.EAST);
@@ -54,15 +61,23 @@ public class ClientGUI implements ActionListener {
         chatPanel.add(message, BorderLayout.SOUTH);
 
         //Status
+        users.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        rooms.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollu = new JScrollPane(users);
+        JScrollPane scrollr = new JScrollPane(rooms);
+        roomWbutton.add(scrollr, BorderLayout.CENTER);
+        roomWbutton.add(join, BorderLayout.SOUTH);
         statusAuswahl.setForeground(Color.BLACK);
-        statusAuswahl.addTab("Benutzer", users);
-        statusAuswahl.addTab("Räume", rooms);
+        statusAuswahl.addTab("Benutzer", scrollu);
+        statusAuswahl.addTab("Räume", roomWbutton);
         status.setLayout(new BorderLayout());
         status.add(statusAuswahl, BorderLayout.CENTER);
+        join.addActionListener(this);
 
         //Information
         information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
         information.add(server);
+        information.add(port);
         information.add(name);
 
         //Panel-Überschriften
@@ -71,9 +86,9 @@ public class ClientGUI implements ActionListener {
         information.setBorder(BorderFactory.createTitledBorder("Information"));
 
         //Panel anordnen
-        controlPanel.setLayout(new GridLayout(0,1));
-        controlPanel.add(status);
-        controlPanel.add(information);
+        controlPanel.setLayout(new BorderLayout());
+        controlPanel.add(status, BorderLayout.CENTER);
+        controlPanel.add(information, BorderLayout.NORTH);
         panel.add(chatPanel, BorderLayout.CENTER);
         panel.add(controlPanel, BorderLayout.EAST);
 
@@ -86,30 +101,50 @@ public class ClientGUI implements ActionListener {
         frame.setVisible(true);
     }
 
+    //Nachricht ins Chatfenster schreiben
     public void addMessage(String m) {
-        chat.append(m);
+        chat.append("\n" + m);
     }
 
+    //Raumliste aktualisieren
     public void setRooms(String[] r) {
         rooms.setListData(r);
     }
 
+    //Nutzerliste aktualisieren
     public void setUsers(String[] u) {
         users.setListData(u);
     }
 
+    //Nutzernamen anzeigen
     public void setUserInformation(String userName) {
-        name.setText("Angemeldet als:" + userName);
+        name.setText("Angemeldet als: " + userName);
     }
 
+    //Serverinformationen anzeigen
     public void setServerInformation(int port, String ip) {
-        server.setText("Server IP: " + ip + " , Port: " + port);
+        server.setText("Server IP: " + ip);
+        this.port.setText("Port: " + port);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == send) {
+            String message = text.getText();
+            text.setText("");
+            addMessage(message);
 
+            //message rausschicken?
+
+        } else if (e.getSource() == join) {
+            if(rooms.getSelectedIndex() == -1) {addMessage("Bitte wähle erst einen Raum aus.");}
+            else {
+                int room = rooms.getSelectedIndex();
+
+                //raum beitreten?
+
+            }
         }
     }
 }
