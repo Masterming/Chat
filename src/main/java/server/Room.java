@@ -8,7 +8,7 @@ public class Room {
     private ArrayList<ClientHandler> users;
     private String name;
     private boolean editable;
-    private static int id_count=0;
+    private static int id_count = 0;
 
     public Room(String name, boolean editable) {
         this.id = id_count;
@@ -18,7 +18,7 @@ public class Room {
         id_count++;
     }
 
-    public boolean geteditable(){
+    public boolean geteditable() {
         return editable;
     }
 
@@ -44,7 +44,7 @@ public class Room {
         return users.size();
     }
 
-    public ArrayList<ClientHandler> getUsers(){
+    public ArrayList<ClientHandler> getUsers() {
         return users;
     }
 
@@ -55,7 +55,8 @@ public class Room {
     public void removeUser(ClientHandler c) {
         users.remove(c);
     }
-    public String toString(){
-        return (name +"["+users.size()+"]");
+
+    public String toString() {
+        return (name + "[" + users.size() + "]");
     }
 }

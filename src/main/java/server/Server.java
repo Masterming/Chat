@@ -33,11 +33,11 @@ public class Server {
         // Make an ArrayList to hold all client objects
         clients = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
-        rooms.put(0, new Room( "Eingangshalle", false));
+        rooms.put(0, new Room("Eingangshalle", false));
         ServerGUI gui = new ServerGUI();
         gui.setRooms(getRooms());
 
-        //gui.setInformationRoom();
+        // gui.setInformationRoom();
 
         running = true;
         i = 0;

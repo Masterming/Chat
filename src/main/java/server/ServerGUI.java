@@ -28,7 +28,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
     private JList<Room> rooms;
     private JTextField text;
     private JButton ok;
-    private JComboBox wahl;
+    private JComboBox<String> wahl;
     private JPanel aufgabeAuswahl;
     private JPanel newRoom;
     private JLabel rName;
@@ -128,7 +128,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
         // Aufgaben
         String auswahlListe[] = { "Raum erstellen", "Raum löschen", "Raum bearbeiten", "Benutzer verwarnen",
                 "Benutzer kicken", "Benutzer bannen" };
-        wahl = new JComboBox(auswahlListe);
+        wahl = new JComboBox<>(auswahlListe);
         ok.addActionListener(this);
         aufgabeAuswahl.add(wahl, BorderLayout.CENTER);
         aufgabeAuswahl.add(ok, BorderLayout.EAST);
@@ -218,18 +218,16 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
         rooms.setListData(r.values().toArray(new Room[0]));
     }
 
-
-    public void setUsers(List<ClientHandler>c) {
+    public void setUsers(List<ClientHandler> c) {
 
         users.setListData(c.toArray(new ClientHandler[0]));
     }
- 
 
     public void setInformationRoom(Room room) {
         info1.setText("ID: " + room.getId());
         info2.setText("Name: " + room.getName());
         info3.setText("Mitglieder: " + room.getUsercount());
-        info4.setText("Editierbar: "+ room.geteditable());
+        info4.setText("Editierbar: " + room.geteditable());
     }
 
     public void setInformationUser(int id, String name) {
@@ -352,12 +350,12 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if(e.getSource() == users) {
+        if (e.getSource() == users) {
             int user = users.getSelectedIndex();
-            
+
             // TODO: Nutzerinformationen setzten (setInformationUser())
 
-        } else if(e.getSource() == rooms) {
+        } else if (e.getSource() == rooms) {
             int room = rooms.getSelectedIndex();
 
             // TODO: Rauminformationen setzten (setInformationRoom())

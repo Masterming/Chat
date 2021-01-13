@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.*;
 
 /**
@@ -23,13 +22,6 @@ public class Servertest {
 
         Server server = new Server(4999);
         server.run();
-
-        
-
-
-        
-
-
 
         System.out.println("Press enter to exit ...");
         try {
