@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Map;
 
 public class ServerGUI implements ActionListener {
 
@@ -20,8 +22,8 @@ public class ServerGUI implements ActionListener {
     private JPanel aufgabe;
     private TextArea chat;
     private JTabbedPane statusAuswahl;
-    private JList users;
-    private JList rooms;
+    private JList<ClientHandler> users;
+    private JList<Room> rooms;
     private JTextField text;
     private JButton ok;
     private JComboBox wahl;
@@ -59,7 +61,7 @@ public class ServerGUI implements ActionListener {
         chatPanel = new JPanel(new BorderLayout());
         controlPanel = new JPanel(new BorderLayout());
         status = new JPanel();
-        information = new JPanel(new GridLayout(2,2));
+        information = new JPanel(new GridLayout(2, 2));
         info1 = new JLabel();
         info2 = new JLabel();
         info3 = new JLabel();
@@ -67,42 +69,42 @@ public class ServerGUI implements ActionListener {
         aufgabe = new JPanel(new BorderLayout());
         chat = new TextArea();
         statusAuswahl = new JTabbedPane();
-        rooms = new JList();
-        users = new JList();
+        rooms = new JList<>();
+        users = new JList<>();
         text = new JTextField();
         ok = new JButton("OK");
         aufgabeAuswahl = new JPanel(new BorderLayout());
-        newRoom = new JPanel(new GridLayout(2,2));
+        newRoom = new JPanel(new GridLayout(2, 2));
         rName = new JLabel("Raumname:");
         roomName = new JTextField();
         editierbar = new JCheckBox("Editierbar");
         okNewRoom = new JButton("Raum erstellen");
-        deleteRoom = new JPanel(new GridLayout(0,1));
+        deleteRoom = new JPanel(new GridLayout(0, 1));
         deleteRLabel = new JLabel("Wähle den Raum aus der Liste aus.");
         deleteRButton = new JButton("Raum löschen");
         editRoom = new JPanel(new BorderLayout());
         editRLabel = new JLabel("Wähle den Raum aus der Liste aus.");
-        editName = new JPanel(new GridLayout(0,2));
+        editName = new JPanel(new GridLayout(0, 2));
         editRNameLabel = new JLabel("Neuer Name:");
         editRNameText = new JTextField();
         editRButton = new JButton("Speichern");
-        warnUser = new JPanel(new GridLayout(0,1));
+        warnUser = new JPanel(new GridLayout(0, 1));
         warnLabel = new JLabel("Wähle einen Nutzer aus und füge eine Nachricht hinzu.");
         warnMessage = new JTextField();
         warnButton = new JButton("Warnen");
-        kickUser = new JPanel(new GridLayout(0,1));
+        kickUser = new JPanel(new GridLayout(0, 1));
         kickLabel = new JLabel("Wähle einen Nutzer aus der Liste aus.");
         kickButton = new JButton("Kicken");
-        banUser = new JPanel(new GridLayout(0,1));
+        banUser = new JPanel(new GridLayout(0, 1));
         banLabel = new JLabel("Wähle einen Nutzer aus der Liste aus.");
         banButton = new JButton("Bannen");
         aufgabeSouth = new JPanel(new FlowLayout());
 
-        //Chatfenster
+        // Chatfenster
         chat.setEditable(false);
         chatPanel.add(chat, BorderLayout.CENTER);
 
-        //Status
+        // Status
         users.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         rooms.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollu = new JScrollPane(users);
@@ -113,14 +115,15 @@ public class ServerGUI implements ActionListener {
         status.setLayout(new BorderLayout());
         status.add(statusAuswahl, BorderLayout.CENTER);
 
-        //Informationen
+        // Informationen
         information.add(info1);
         information.add(info2);
         information.add(info3);
         information.add(info4);
 
-        //Aufgaben
-        String auswahlListe[] = {"Raum erstellen","Raum löschen","Raum bearbeiten","Benutzer verwarnen","Benutzer kicken","Benutzer bannen"};
+        // Aufgaben
+        String auswahlListe[] = { "Raum erstellen", "Raum löschen", "Raum bearbeiten", "Benutzer verwarnen",
+                "Benutzer kicken", "Benutzer bannen" };
         wahl = new JComboBox(auswahlListe);
         ok.addActionListener(this);
         aufgabeAuswahl.add(wahl, BorderLayout.CENTER);
@@ -134,7 +137,7 @@ public class ServerGUI implements ActionListener {
         aufgabeSouth.add(kickUser);
         aufgabeSouth.add(banUser);
 
-        //Raum erstellen
+        // Raum erstellen
         okNewRoom.addActionListener(this);
         newRoom.add(rName);
         newRoom.add(roomName);
@@ -142,14 +145,14 @@ public class ServerGUI implements ActionListener {
         newRoom.add(okNewRoom);
         newRoom.setVisible(false);
 
-        //Raum löschen
+        // Raum löschen
         deleteRoom.add(deleteRLabel);
         deleteRoom.add(deleteRButton);
         deleteRButton.setForeground(Color.RED);
         deleteRButton.addActionListener(this);
         deleteRoom.setVisible(false);
 
-        //Raum editieren
+        // Raum editieren
         editRoom.add(editRLabel, BorderLayout.NORTH);
         editName.add(editRNameLabel);
         editName.add(editRNameText);
@@ -158,7 +161,7 @@ public class ServerGUI implements ActionListener {
         editRButton.addActionListener(this);
         editRoom.setVisible(false);
 
-        //Nutzer warnen
+        // Nutzer warnen
         warnUser.add(warnLabel);
         warnUser.add(warnMessage);
         warnUser.add(warnButton);
@@ -166,66 +169,68 @@ public class ServerGUI implements ActionListener {
         warnButton.setForeground(Color.RED);
         warnUser.setVisible(false);
 
-        //Nutzer kicken
+        // Nutzer kicken
         kickUser.add(kickLabel);
         kickUser.add(kickButton);
         kickButton.addActionListener(this);
         kickButton.setForeground(Color.RED);
         kickUser.setVisible(false);
 
-        //Nutzer bannen
+        // Nutzer bannen
         banUser.add(banLabel);
         banUser.add(banButton);
         banButton.addActionListener(this);
         banButton.setForeground(Color.RED);
         banUser.setVisible(false);
 
-        //Panel-Überschriften
+        // Panel-Überschriften
         chatPanel.setBorder(BorderFactory.createTitledBorder("Chat"));
         status.setBorder(BorderFactory.createTitledBorder("Status"));
         information.setBorder(BorderFactory.createTitledBorder("Information"));
         aufgabe.setBorder(BorderFactory.createTitledBorder("Aufgaben"));
 
-        //Panel anordnen
+        // Panel anordnen
         controlPanel.add(status, BorderLayout.CENTER);
         controlPanel.add(information, BorderLayout.NORTH);
         controlPanel.add(aufgabe, BorderLayout.SOUTH);
         panel.add(chatPanel, BorderLayout.CENTER);
         panel.add(controlPanel, BorderLayout.EAST);
 
-        //hübsch aussehen
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        // hübsch aussehen
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Server");
         frame.pack();
         frame.setVisible(true);
-        frame.setMinimumSize(new Dimension(800,350));
+        frame.setMinimumSize(new Dimension(800, 350));
     }
 
     public void addMessage(String m) {
         chat.append("\n" + m);
     }
 
-    public void setRooms(String[] r) {
-        rooms.setListData(r);
+    public void setRooms(Map<Integer, Room> r) {
+        rooms.setListData(r.values().toArray(new Room[0]));
     }
 
-    public void setUsers(String[] u) {
-        users.setListData(u);
-    }
 
-    public void setInformationRoom(int id, String name, int mitglieder, boolean edit) {
-        info1.setText("ID: " + id);
-        info2.setText("Name: " + name);
-        info3.setText("Mitglieder: " + mitglieder);
-        if(edit){ info4.setText("Editierbar: ja"); }
-        else{ info4.setText("Editierbar: nein"); }
+    public void setUsers(List<ClientHandler>c) {
+
+        users.setListData(c.toArray(new ClientHandler[0]));
+    }
+ 
+
+    public void setInformationRoom(Room room) {
+        info1.setText("ID: " + room.getId());
+        info2.setText("Name: " + room.getName());
+        info3.setText("Mitglieder: " + room.getUsercount());
+        info4.setText("Editierbar: "+ room.geteditable());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == ok) {
+        if (e.getSource() == ok) {
             newRoom.setVisible(false);
             deleteRoom.setVisible(false);
             editRoom.setVisible(false);
@@ -268,21 +273,21 @@ public class ServerGUI implements ActionListener {
                 Boolean edit = editierbar.isSelected();
                 newRoom.setVisible(false);
 
-                // TODO: Raum erstellen
+                Server.addroom(new Room(roomname, edit));
 
             }
-        } else if(e.getSource() == deleteRButton){
-            if(rooms.getSelectedIndex() == -1){
+        } else if (e.getSource() == deleteRButton) {
+            if (rooms.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Raum aus!");
             } else {
-                int room = rooms.getSelectedIndex();
+                Room room = rooms.getSelectedValue();
                 deleteRoom.setVisible(false);
 
-                // TODO: Raum löschen
+                Server.deleteRoom(room.getId());
 
             }
-        } else if(e.getSource() == editRButton) {
-            if(rooms.getSelectedIndex() == -1){
+        } else if (e.getSource() == editRButton) {
+            if (rooms.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Raum aus!");
             } else {
                 if (editRNameText.getText().equals("")) {
@@ -296,8 +301,8 @@ public class ServerGUI implements ActionListener {
 
                 }
             }
-        } else if(e.getSource() == warnButton){
-            if(users.getSelectedIndex() == -1){
+        } else if (e.getSource() == warnButton) {
+            if (users.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Nutzer aus!");
             } else {
                 if (warnMessage.getText().equals("")) {
@@ -311,8 +316,8 @@ public class ServerGUI implements ActionListener {
 
                 }
             }
-        } else if(e.getSource() == kickButton){
-            if(users.getSelectedIndex() == -1){
+        } else if (e.getSource() == kickButton) {
+            if (users.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Nutzer aus!");
             } else {
                 int user = users.getSelectedIndex();
@@ -321,8 +326,8 @@ public class ServerGUI implements ActionListener {
                 // TODO: Nutzer kicken
 
             }
-        } else if(e.getSource() == banButton){
-            if(users.getSelectedIndex() == -1){
+        } else if (e.getSource() == banButton) {
+            if (users.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Nutzer aus!");
             } else {
                 int user = users.getSelectedIndex();

@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
 
     private final int id;
     private String name;
-    private int roomID;
+    public int roomID;
 
     private boolean running;
     private boolean logged;
@@ -185,5 +185,9 @@ public class ClientHandler implements Runnable {
             }
             LOGGER.log(Level.INFO, "Connection closed");
         }
+    }
+
+    public String toString() {
+        return ("[" + Server.getRooms().get(roomID).getName() + "] " + name);
     }
 }

@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 /**
@@ -24,22 +25,13 @@ public class Servertest {
         server.run();
 
         ServerGUI test = new ServerGUI();
-        String[] rooms = new String[3];
+        ArrayList<Room> rooms = new ArrayList<Room>();
 
-        for (int i = 0; i < 3; i++) {
-            rooms[i] = "Raum " + i;
-        }
+        
 
-        test.setRooms(rooms);
-
-        String[] user = new String[3];
-
-        for (int i = 0; i < 3; i++) {
-            user[i] = "Nutzer " + i;
-        }
-
-        test.setUsers(user);
-        test.setInformationRoom(3, "Testraum", 45, true);
+        test.setRooms(Server.getRooms());
+        test.setUsers(Server.getClients());
+        //test.setInformationRoom();
 
         System.out.println("Press enter to exit ...");
         try {

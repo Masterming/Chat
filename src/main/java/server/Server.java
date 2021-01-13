@@ -17,7 +17,7 @@ public class Server {
     private final int port;
     private boolean running;
     private static List<ClientHandler> clients;
-    private static List<Room> rooms;
+    private static Map<Integer, Room> rooms;
     private static int i;
 
     private static SQLSocket sql;
@@ -31,8 +31,8 @@ public class Server {
 
         // Make an ArrayList to hold all client objects
         clients = Collections.synchronizedList(new ArrayList<>(128));
-        rooms = Collections.synchronizedList(new ArrayList<>(10));
-        rooms.add(new Room(0, "DEFAULT", false));
+        rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
+        rooms.put(0, new Room( "Eingangshalle", false));
         running = true;
         i = 0;
 
@@ -106,8 +106,31 @@ public class Server {
         }
     }
 
-    public static List<ClientHandler> getClientsInRoom(int id){
+    public static List<ClientHandler> getClientsInRoom(int id) {
         // TODO: get Room and clients
         return null;
+    }
+
+    public static void changeRoom(int destination_id, ClientHandler user) {
+        rooms.get(user.roomID).removeUser(user);
+        user.roomID = destination_id;
+        rooms.get(user.roomID).addUser(user);
+    }
+
+    public static Map<Integer, Room> getRooms() {
+        return rooms;
+    }
+
+    public static void addroom(Room new_room) {
+        rooms.put(new_room.getId(), new_room);
+    }
+
+    public static void deleteRoom(int room_id) {
+        if (rooms.get(room_id).geteditable()) {
+            for (ClientHandler c : rooms.get(room_id).getUsers()) {
+                changeRoom(0, c);
+            }
+            rooms.remove(room_id);
+        }
     }
 }
