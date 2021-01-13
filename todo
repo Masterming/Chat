@@ -12,13 +12,8 @@ raum editieren -> raumliste(if(editierbar)), new_name (textfeld), bestätigen(bu
 benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(button) DONE
 benutzer kicken -> benutzerliste, bestätigen(button) DONE
     |->force-ausloggen
-<<<<<<< HEAD
-benutzer bannen -> benutzerliste, bestätigen(button)
-    |->in DB boolean banned hinzufügen (done) und bei benutzerban auf true setzen -> loginmethode banned checken lassen DONE
-=======
 benutzer bannen -> benutzerliste, bestätigen(button) DONE
     |->in DB boolean banned hinzufügen (done) und bei benutzerban auf true setzen -> loginmethode banned checken lassen
->>>>>>> 09e08b6743565cdcd13ba20017e8d5ff411f7c7c
 
 extras:
 serverseitige grundstruktur an räumen 

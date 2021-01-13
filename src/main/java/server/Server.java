@@ -19,6 +19,7 @@ public class Server {
     private static List<ClientHandler> clients;
     private static Map<Integer, Room> rooms;
     private static int i;
+    private ServerGUI gui;
 
     private static SQLSocket sql;
 
@@ -33,6 +34,11 @@ public class Server {
         clients = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
         rooms.put(0, new Room( "Eingangshalle", false));
+        ServerGUI gui = new ServerGUI();
+        gui.setRooms(getRooms());
+
+        //gui.setInformationRoom();
+
         running = true;
         i = 0;
 
@@ -78,6 +84,7 @@ public class Server {
 
                 clients.add(c);
                 rooms.get(0).addUser(c);
+                gui.setUsers(getClients());
                 Thread t = new Thread(c);
                 t.start();
             }

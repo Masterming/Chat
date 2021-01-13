@@ -24,14 +24,12 @@ public class Servertest {
         Server server = new Server(4999);
         server.run();
 
-        ServerGUI test = new ServerGUI();
-        ArrayList<Room> rooms = new ArrayList<Room>();
+        
+
 
         
 
-        test.setRooms(Server.getRooms());
-        test.setUsers(Server.getClients());
-        //test.setInformationRoom();
+
 
         System.out.println("Press enter to exit ...");
         try {
