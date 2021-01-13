@@ -6,15 +6,13 @@ benutzerliste -> onclick -> informationsfeld -> name, id, etc.
 
 clientgui -> button unter raumliste für join DONE
 
-serveraktionen: aktionen in pop-up fenster
-
 raum erstellen -> name (textfeld), editierbar (checkbox), bestätigen(button) DONE
 raum löschen -> raumliste (jlist), bestätigen(button) DONE
 raum editieren -> raumliste(if(editierbar)), new_name (textfeld), bestätigen(button) DONE
-benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(button)
-benutzer kicken -> benutzerliste, bestätigen(button)
+benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(button) DONE
+benutzer kicken -> benutzerliste, bestätigen(button) DONE
     |->force-ausloggen
-benutzer bannen -> benutzerliste, bestätigen(button)
+benutzer bannen -> benutzerliste, bestätigen(button) DONE
     |->in DB boolean banned hinzufügen (done) und bei benutzerban auf true setzen -> loginmethode banned checken lassen
 
 extras:
