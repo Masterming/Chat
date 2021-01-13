@@ -1,4 +1,4 @@
-package client;
+package user;
 
 import java.io.*;
 import java.net.*;
@@ -8,10 +8,12 @@ import java.util.logging.Logger;
 /**
  * @author blechner
  */
-public class Client {
+public class User {
 
-    private final static Logger LOGGER = Logger.getLogger(Client.class.getName());
-
+    private final static Logger LOGGER = Logger.getLogger(User.class.getName());
+    private UserGUI gui;
+    private LoginGUI login_gui;
+    private boolean logged;
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
@@ -20,9 +22,10 @@ public class Client {
     private final String ip;
     private final int port;
 
-    public Client(String ip, int port) {
+    public User(String ip, int port) {
         this.ip = ip;
         this.port = port;
+
     }
 
     public void run() {
@@ -31,6 +34,10 @@ public class Client {
             setup();
             new Thread(() -> recieve()).start();
             new Thread(() -> consoleWrite()).start();
+            login_gui = new LoginGUI();
+            if (logged){
+                gui = new UserGUI();
+            }
         } catch (IOException e) {
             close();
         }

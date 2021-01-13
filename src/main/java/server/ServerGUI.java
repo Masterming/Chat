@@ -24,7 +24,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
     private JPanel aufgabe;
     private TextArea chat;
     private JTabbedPane statusAuswahl;
-    private JList<ClientHandler> users;
+    private JList<UserHandler> users;
     private JList<Room> rooms;
     private JTextField text;
     private JButton ok;
@@ -218,16 +218,16 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
         rooms.setListData(r.values().toArray(new Room[0]));
     }
 
-    public void setUsers(List<ClientHandler> c) {
+    public void setUsers(List<UserHandler> c) {
 
-        users.setListData(c.toArray(new ClientHandler[0]));
+        users.setListData(c.toArray(new UserHandler[0]));
     }
 
     public void setInformationRoom(Room room) {
         info1.setText("ID: " + room.getId());
         info2.setText("Name: " + room.getName());
         info3.setText("Mitglieder: " + room.getUsercount());
-        info4.setText("Editierbar: " + room.geteditable());
+        info4.setText("Editierbar: " + room.isEditable());
     }
 
     public void setInformationUser(int id, String name) {
@@ -293,8 +293,8 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
                 deleteRoom.setVisible(false);
 
                 Server.deleteRoom(room.getId());
-
             }
+
         } else if (e.getSource() == editRButton) {
             if (rooms.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Raum aus!");
@@ -303,11 +303,10 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
                     addMessage("Neuen Raumnamen eintragen!");
                 } else {
                     String name = editRNameText.getText();
-                    int room = rooms.getSelectedIndex();
+                    Room room = rooms.getSelectedValue();
                     editRoom.setVisible(false);
 
-                    // TODO: Raum bearbeiten (wenn editierbar)
-
+                    Server.editRoom(room.getId(), name);
                 }
             }
         } else if (e.getSource() == warnButton) {

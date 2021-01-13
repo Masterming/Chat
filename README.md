@@ -1,21 +1,21 @@
-Das Client-Server-Programm wird als Konsolen-Anwendung realisiert!
+Das User-Server-Programm wird als Konsolen-Anwendung realisiert!
 
 # Meilenstein 1
 ## Server:
 Der Server sollte mindestens folgende Anforderungen unterstützen:
 - starten und beenden des ServerSockets
-- Realisierung eines Netzwerk-Listener, der es neuen Clients ermöglicht, sich anzumelden
-- Realisierung eines Nachrichten-Listener, welcher die Voraussetzung für den Nachrichtenaustausch zwischen Clients schafft
+- Realisierung eines Netzwerk-Listener, der es neuen Users ermöglicht, sich anzumelden
+- Realisierung eines Nachrichten-Listener, welcher die Voraussetzung für den Nachrichtenaustausch zwischen Users schafft
 - die Möglichkeit, Namen und dazugehörige Passwörter zu speichern und zu verwalten – solange der Server läuft
-- Realisierung eines Anmeldevorgangs, bei dem sich ein Client mit Namen und Passwort anmeldet. Sollte der Name noch nicht registriert sein, werden diese Daten auf dem Server gespeichert
-- nach einem Anmeldevorgang bekommt der sich gerade angemeldete Client eine aktuelle Liste der Namen von bereits angemeldeten Clients gesendet.
-- nach einem Anmeldevorgang erhalten alle bisher angemeldeten Clients weiter eine Meldung, dass sich ein neuer Client angemeldet hat
+- Realisierung eines Anmeldevorgangs, bei dem sich ein User mit Namen und Passwort anmeldet. Sollte der Name noch nicht registriert sein, werden diese Daten auf dem Server gespeichert
+- nach einem Anmeldevorgang bekommt der sich gerade angemeldete User eine aktuelle Liste der Namen von bereits angemeldeten Users gesendet.
+- nach einem Anmeldevorgang erhalten alle bisher angemeldeten Users weiter eine Meldung, dass sich ein neuer User angemeldet hat
  
-## Client:
-Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
+## User:
+Ein User sollte mindestens die folgenden Anforderungen unterstützen:
 - Möglichkeit zum Aufbau und Trennen einer Verbindung zum Server 
 - Weitergabe einer Eingabemaske mit Name und Passwort um sich beim Server anzumelden
-- Möglichkeit zum Senden von Nachrichten an alle angemeldeten Clients 
+- Möglichkeit zum Senden von Nachrichten an alle angemeldeten Users 
 - Nachrichten, welche vom Server gesendet werden zu empfangen und zu visualisieren
 
 
@@ -33,8 +33,8 @@ und Verwaltung
 - Bereitstellung von Methoden zur Verwaltung von Benutzern (Verwarnen, Kick, Ban)
 - prüfung von doppelter anmeldung
  
-## Client:
+## User:
 - Implementierung als grafische Benutzerschnittstelle
 - Realisierung einer visuellen Anzeige, einschließlich dynamischer Aktualisierung von Räume und alle Nutzer im Raum
-- Anordnung einer Kommunikationsoberfläche, wodurch die Möglichkeit geschaffen wird, mit anderen Clients zu kommunizieren
-- möglichkeit des clienten selber die verbindung sauber zu trennen
+- Anordnung einer Kommunikationsoberfläche, wodurch die Möglichkeit geschaffen wird, mit anderen Users zu kommunizieren
+- möglichkeit des useren selber die verbindung sauber zu trennen

@@ -1,10 +1,10 @@
 logger -> chat append in servergui
 
 arraylist für rooms -> gui raumliste
-server/clientgui  clientlist 
+server/usergui  userlist 
 benutzerliste -> onclick -> informationsfeld -> name, id, etc.
 
-clientgui -> button unter raumliste für join DONE
+usergui -> button unter raumliste für join DONE
 
 raum erstellen -> name (textfeld), editierbar (checkbox), bestätigen(button) DONE
 raum löschen -> raumliste (jlist), bestätigen(button) DONE

@@ -1,4 +1,4 @@
-package client;
+package user;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ClientGUI implements ActionListener {
+public class UserGUI implements ActionListener {
 
-    private final static Logger LOGGER = Logger.getLogger(ClientGUI.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(UserGUI.class.getName());
 
     private JFrame frame;
     private JPanel panel;
@@ -30,7 +30,7 @@ public class ClientGUI implements ActionListener {
     private JButton join;
     private JPanel roomWbutton;
 
-    public ClientGUI() {
+    public UserGUI() {
 
         frame = new JFrame();
         panel = new JPanel(new BorderLayout());
@@ -96,7 +96,7 @@ public class ClientGUI implements ActionListener {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Client");
+        frame.setTitle("User");
         frame.pack();
         frame.setVisible(true);
     }

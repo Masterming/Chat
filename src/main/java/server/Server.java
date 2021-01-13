@@ -16,10 +16,10 @@ public class Server {
 
     private final int port;
     private boolean running;
-    private static List<ClientHandler> clients;
+    private static List<UserHandler> users;
     private static Map<Integer, Room> rooms;
     private static int i;
-    private ServerGUI gui;
+    private static ServerGUI gui;
 
     private static SQLSocket sql;
 
@@ -30,12 +30,12 @@ public class Server {
     public Server(int port) {
         this.port = port;
 
-        // Make an ArrayList to hold all client objects
-        clients = Collections.synchronizedList(new ArrayList<>(128));
+        // Make an ArrayList to hold all user objects
+        users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
         rooms.put(0, new Room("Eingangshalle", false));
-        ServerGUI gui = new ServerGUI();
-        gui.setRooms(getRooms());
+        gui = new ServerGUI();
+        updategui();
 
         // gui.setInformationRoom();
 
@@ -48,14 +48,14 @@ public class Server {
     public void run() {
         try {
             server = new ServerSocket(port, 100);
-            LOGGER.log(Level.INFO, "Server started. Waiting for clients...");
-            new Thread(() -> AcceptClientsAsync()).start();
+            LOGGER.log(Level.INFO, "Server started. Waiting for users...");
+            new Thread(() -> AcceptUsersAsync()).start();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to start the sever: " + e.getMessage());
         }
     }
 
-    private void AcceptClientsAsync() {
+    private void AcceptUsersAsync() {
         try {
             Socket socket;
             BufferedReader input;
@@ -63,28 +63,26 @@ public class Server {
 
             while (running) {
                 if (i == 128) {
-                    LOGGER.log(Level.WARNING, "Maximum number of clients reached.");
+                    LOGGER.log(Level.WARNING, "Maximum number of users reached.");
                     break;
                 }
                 i++;
 
-                // Connect with client
+                // Connect with user
                 socket = server.accept();
                 // LOGGER.log(Level.INFO, "Connected to " +
                 // socket.getInetAddress().getHostName() +
                 // "(i=" + i + ")");
 
-                // Setup streams with client
+                // Setup streams with user
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                 output.flush();
 
                 // Create a new handler object for handling this request.
-                ClientHandler c = new ClientHandler(socket, input, output, i, "Client" + i);
+                UserHandler c = new UserHandler(socket, input, output, i, "User" + i);
 
-                clients.add(c);
-                rooms.get(0).addUser(c);
-                gui.setUsers(getClients());
+                users.add(c);
                 Thread t = new Thread(c);
                 t.start();
             }
@@ -95,8 +93,14 @@ public class Server {
     }
 
     // Getter
-    public static List<ClientHandler> getClients() {
-        return clients;
+    public static List<UserHandler> getUsers() {
+        List<UserHandler> loggedUsers = new ArrayList<>();
+        for (UserHandler u : users) {
+            if (u.getlogged()) {
+                loggedUsers.add(u);
+            }
+        }
+        return loggedUsers;
     }
 
     public void stop() {
@@ -113,15 +117,21 @@ public class Server {
         }
     }
 
-    public static List<ClientHandler> getClientsInRoom(int id) {
-        // TODO: get Room and clients
+    public static void updategui() {
+        gui.setRooms(rooms);
+        gui.setUsers(users);
+    }
+
+    public static List<UserHandler> getUsersInRoom(int id) {
+        // TODO: get Room and users
         return null;
     }
 
-    public static void changeRoom(int destination_id, ClientHandler user) {
+    public static void changeRoom(int destination_id, UserHandler user) {
         rooms.get(user.roomID).removeUser(user);
         user.roomID = destination_id;
         rooms.get(user.roomID).addUser(user);
+        updategui();
     }
 
     public static Map<Integer, Room> getRooms() {
@@ -130,14 +140,27 @@ public class Server {
 
     public static void addroom(Room new_room) {
         rooms.put(new_room.getId(), new_room);
+        updategui();
     }
 
     public static void deleteRoom(int room_id) {
-        if (rooms.get(room_id).geteditable()) {
-            for (ClientHandler c : rooms.get(room_id).getUsers()) {
+        if (rooms.get(room_id).isEditable()) {
+            for (UserHandler c : rooms.get(room_id).getUsers()) {
                 changeRoom(0, c);
             }
             rooms.remove(room_id);
+            updategui();
+        }
+    }
+
+    public static void editRoom(int id, String name) {
+        if (rooms.get(id).isEditable()) {
+            rooms.get(id).setName(name);
+            updategui();
+            LOGGER.log(Level.INFO, "Raum editiert");
+        }
+        else{
+            LOGGER.log(Level.WARNING, "Raum nicht editierbar");
         }
     }
 }

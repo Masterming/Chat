@@ -8,22 +8,20 @@ import java.util.logging.*;
 /**
  * @author blechner
  */
-public class ClientHandler implements Runnable {
+public class UserHandler implements Runnable {
 
-    private final static Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(UserHandler.class.getName());
 
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
-
     private final int id;
     private String name;
     public int roomID;
-
     private boolean running;
     private boolean logged;
 
-    public ClientHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
+    public UserHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
         this.socket = s;
         this.input = in;
         this.output = out;
@@ -39,6 +37,8 @@ public class ClientHandler implements Runnable {
 
         login();
         if (logged) {
+            Server.getRooms().get(roomID).addUser(this);
+            Server.updategui();
             printActive();
             printNew();
             recieve();
@@ -46,7 +46,7 @@ public class ClientHandler implements Runnable {
         this.close();
 
     }
-    // recieve message and share it with all remaining clients
+    // recieve message and share it with all remaining users
 
     private void recieve() {
         // blocking
@@ -58,9 +58,9 @@ public class ClientHandler implements Runnable {
             try {
                 count = input.read(buffer, 0, 1024);
                 String s = new String(buffer, 0, count);
-                LOGGER.log(Level.INFO, "Client " + id + ": " + s);
+                LOGGER.log(Level.INFO, "User " + id + ": " + s);
 
-                for (ClientHandler handler : Server.getClientsInRoom(roomID)) {
+                for (UserHandler handler : Server.getUsersInRoom(roomID)) {
                     if (handler.id != this.id) {
                         handler.write("[" + name + "]: " + s + "\n");
                     }
@@ -153,7 +153,7 @@ public class ClientHandler implements Runnable {
 
     private void printActive() {
         List<String> active = new ArrayList<>();
-        for (ClientHandler handler : Server.getClients()) {
+        for (UserHandler handler : Server.getUsers()) {
             // Only show users, who are connected and logged in
             if (handler.id != this.id && handler.logged) {
                 active.add(handler.name);
@@ -164,7 +164,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void printNew() {
-        for (ClientHandler handler : Server.getClients()) {
+        for (UserHandler handler : Server.getUsers()) {
             // Only show to users, who are connected and logged in
             if (handler.id != this.id && handler.logged) {
                 handler.write("[System]: " + name + " connected\n");
@@ -185,6 +185,9 @@ public class ClientHandler implements Runnable {
             }
             LOGGER.log(Level.INFO, "Connection closed");
         }
+    }
+    public boolean getlogged(){
+        return logged;
     }
 
     public String toString() {

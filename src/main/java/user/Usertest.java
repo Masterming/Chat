@@ -1,15 +1,15 @@
-package client;
+package user;
 
 /**
  * @author blechner
  */
-public class Clienttest {
+public class Usertest {
 
     public static void main(String[] args) {
-        Client c = new Client("127.0.0.1", 4999);
+        User c = new User("127.0.0.1", 4999);
         c.run();
 
-        ClientGUI test2 = new ClientGUI();
+        UserGUI test2 = new UserGUI();
 
         // neue Nachricht
         test2.addMessage("test123");
