@@ -2,11 +2,16 @@ package client;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author blechner
  */
 public class Client {
+
+    private final static Logger LOGGER = Logger.getLogger(Client.class.getName());
+
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
@@ -34,13 +39,14 @@ public class Client {
     private void connect() throws IOException {
         socket = new Socket(InetAddress.getByName(ip), port);
         System.out.println("Connected to: " + ip + ":" + port);
+        LOGGER.log(Level.INFO, "Connected to: " + ip + ":" + port);
     }
 
     private void setup() throws IOException {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         output.flush();
-        // System.out.println("Stream Setup complete.");
+        LOGGER.log(Level.INFO, "Stream Setup complete.");
     }
 
     private void write(String msg) {
@@ -79,7 +85,7 @@ public class Client {
     }
 
     public void close() {
-        System.out.println("\n The server disconneted...");
+        // System.out.println("\n The server disconnected...");
         running = false;
         try {
             input.close();

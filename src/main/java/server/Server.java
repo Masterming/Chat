@@ -17,6 +17,7 @@ public class Server {
     private final int port;
     private boolean running;
     private static List<ClientHandler> clients;
+    private static List<Room> rooms;
     private static int i;
 
     private static SQLSocket sql;
@@ -30,6 +31,8 @@ public class Server {
 
         // Make an ArrayList to hold all client objects
         clients = Collections.synchronizedList(new ArrayList<>(128));
+        rooms = Collections.synchronizedList(new ArrayList<>(10));
+        rooms.add(new Room(0, "DEFAULT", false));
         running = true;
         i = 0;
 
@@ -71,10 +74,11 @@ public class Server {
                 output.flush();
 
                 // Create a new handler object for handling this request.
-                ClientHandler handler = new ClientHandler(socket, input, output, i, "Client" + i);
+                ClientHandler c = new ClientHandler(socket, input, output, i, "Client" + i);
 
-                clients.add(handler);
-                Thread t = new Thread(handler);
+                clients.add(c);
+                rooms.get(0).addUser(c);
+                Thread t = new Thread(c);
                 t.start();
             }
         } catch (IOException e) {
@@ -100,5 +104,10 @@ public class Server {
             }
 
         }
+    }
+
+    public static List<ClientHandler> getClientsInRoom(int id){
+        // TODO: get Room and clients
+        return null;
     }
 }

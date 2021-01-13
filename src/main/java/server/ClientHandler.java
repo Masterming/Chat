@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
 
     private final int id;
     private String name;
-    private Room room;
+    private int roomID;
 
     private boolean running;
     private boolean logged;
@@ -29,6 +29,7 @@ public class ClientHandler implements Runnable {
         this.output = out;
         this.id = id;
         this.name = name;
+        this.roomID = 0;
     }
 
     @Override
@@ -59,11 +60,9 @@ public class ClientHandler implements Runnable {
                 String s = new String(buffer, 0, count);
                 LOGGER.log(Level.INFO, "Client " + id + ": " + s);
 
-                for (ClientHandler handler : Server.getClients()) {
-                    if (handler.room.getId() == this.room.getId()) {
-                        if (handler.id != this.id) {
-                            handler.write("[" + name + "]: " + s + "\n");
-                        }
+                for (ClientHandler handler : Server.getClientsInRoom(roomID)) {
+                    if (handler.id != this.id) {
+                        handler.write("[" + name + "]: " + s + "\n");
                     }
                 }
             } catch (IOException e) {

@@ -129,23 +129,26 @@ public class ClientGUI implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == send) {
-            String message = text.getText();
-            text.setText("");
-            addMessage(message);
+        switch (e.getActionCommand()) {
+            case "send":
+                String message = text.getText();
+                text.setText("");
+                addMessage(message);
+                // TODO: send message
+                break;
 
-            // message rausschicken?
+            case "join":
+                if (rooms.getSelectedIndex() == -1) {
+                    addMessage("Bitte wähle erst einen Raum aus.");
+                } else {
+                    int room = rooms.getSelectedIndex();
+                    LOGGER.log(Level.INFO, "Entered room" + room);
+                    // TODO: join room
+                }
+                break;
 
-        } else if (e.getSource() == join) {
-            if (rooms.getSelectedIndex() == -1) {
-                addMessage("Bitte wähle erst einen Raum aus.");
-            } else {
-                int room = rooms.getSelectedIndex();
-                LOGGER.log(Level.INFO, "Entered room" + room);
-
-                // raum beitreten?
-
-            }
+            default:
+                break;
         }
     }
 }
