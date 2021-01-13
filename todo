@@ -4,13 +4,13 @@ arraylist für rooms -> gui raumliste
 server/clientgui  clientlist 
 benutzerliste -> onclick -> informationsfeld -> name, id, etc.
 
-clientgui -> button unter raumliste für join
+clientgui -> button unter raumliste für join DONE
 
 serveraktionen: aktionen in pop-up fenster
 
-raum erstellen -> name (textfeld), editierbar (checkbox), bestätigen(button)
-raum löschen -> raumliste (jlist), bestätigen(button)
-raum editieren -> raumliste(if(editierbar)), new_name (textfeld), bestätigen(button)
+raum erstellen -> name (textfeld), editierbar (checkbox), bestätigen(button) DONE
+raum löschen -> raumliste (jlist), bestätigen(button) DONE
+raum editieren -> raumliste(if(editierbar)), new_name (textfeld), bestätigen(button) DONE
 benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(button)
 benutzer kicken -> benutzerliste, bestätigen(button)
     |->force-ausloggen
