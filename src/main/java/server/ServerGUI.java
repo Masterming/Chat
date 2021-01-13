@@ -1,13 +1,15 @@
 package server;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
-public class ServerGUI implements ActionListener {
+public class ServerGUI implements ActionListener, ListSelectionListener {
 
     private JFrame frame;
     private JPanel panel;
@@ -106,7 +108,9 @@ public class ServerGUI implements ActionListener {
 
         // Status
         users.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        users.addListSelectionListener(this);
         rooms.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        rooms.addListSelectionListener(this);
         JScrollPane scrollu = new JScrollPane(users);
         JScrollPane scrollr = new JScrollPane(rooms);
         statusAuswahl.setForeground(Color.BLACK);
@@ -228,6 +232,13 @@ public class ServerGUI implements ActionListener {
         info4.setText("Editierbar: "+ room.geteditable());
     }
 
+    public void setInformationUser(int id, String name) {
+        info1.setText("ID: " + id);
+        info2.setText("Name: " + name);
+        info3.setText("");
+        info4.setText("");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == ok) {
@@ -336,6 +347,21 @@ public class ServerGUI implements ActionListener {
                 // TODO: Nutzer bannen
 
             }
+        }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getSource() == users) {
+            int user = users.getSelectedIndex();
+            
+            // TODO: Nutzerinformationen setzten (setInformationUser())
+
+        } else if(e.getSource() == rooms) {
+            int room = rooms.getSelectedIndex();
+
+            // TODO: Rauminformationen setzten (setInformationRoom())
+
         }
     }
 }
