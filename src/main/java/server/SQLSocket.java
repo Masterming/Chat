@@ -2,12 +2,14 @@ package server;
 
 import java.sql.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * @author blechner
  */
 public class SQLSocket {
 
+    private final static Logger LOGGER = Logger.getLogger(SQLSocket.class.getName());
     private Connection con;
 
     public SQLSocket() {
@@ -52,23 +54,32 @@ public class SQLSocket {
         return l;
     }
 
-    public boolean login(String un, String pw) {
-        String res = null;
-
+    public int login(String un, String pw) {
+        String pw_rs = null;
+        int banned_rs = 0;
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select Password from register where name = \"" + un + "\"");
+            ResultSet rs = stmt.executeQuery("select Password, banned from register where name = \"" + un + "\"");
 
             while (rs.next()) {
-                res = rs.getString(1);
+                pw_rs = rs.getString(1);
+                banned_rs = rs.getInt(2);
             }
-            if (res == null) {
-                return false;
+            if (banned_rs == 1) {
+                LOGGER.log(Level.INFO, "User is Banned");
+                return 1; // 1: user banned
             }
-            return (res.equals(pw));
+            if (pw_rs == null) {
+                return -1;// -1: error
+            } else if (!pw_rs.equals(pw)) {
+                return 2;// 2: pw falsch
+            } else {
+                return 0;// : passt alles
+            }
+
         } catch (SQLException e) {
-            // System.out.println(e.getMessage());
-            return false;
+            System.out.println(e.getMessage());
+            return -1;
         }
 
     }

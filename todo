@@ -15,7 +15,7 @@ benutzer verwarnen -> benutzerliste(jlist), message(textfeld), bestätigen(butto
 benutzer kicken -> benutzerliste, bestätigen(button)
     |->force-ausloggen
 benutzer bannen -> benutzerliste, bestätigen(button)
-    |->in DB boolean banned hinzufügen und bei benutzerban auf true setzen -> loginmethode banned checken lassen
+    |->in DB boolean banned hinzufügen (done) und bei benutzerban auf true setzen -> loginmethode banned checken lassen
 
 extras:
 serverseitige grundstruktur an räumen 

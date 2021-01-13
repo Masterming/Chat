@@ -97,21 +97,39 @@ public class ClientHandler implements Runnable {
             password = new String(buffer, 0, count);
             password = password.replaceAll("[^(A-z)]", "");
 
-            if (checkPassword(username, password)) {
-                name = username;
-                logged = true;
-            } else {
-                write("Wrong password.\n");
-                login();
+            switch (checkPassword(username, password)) {
+                case -1: // weird stuff happened
+                    write("something went wrong on our side, please try again later\n");
+                    login();
+                    break;
+                case 0: // logged in
+                    this.write("login as: " + username + " successful\n");
+                    name = username;
+                    logged = true;
+                    break;
+                case 1: // banned
+                    write("You are banned.\n");
+                    close();
+                    break;
+                case 2: // pw wrong
+                    write("Wrong password.\n");
+                    login();
+                    break;
+                case 3: // registered
+                    this.write("registered as: " + username + "\n");
+                    name = username;
+                    logged = true;
+                    break;
+                default:
+                    break;
             }
-
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
             close();
         }
     }
 
-    public boolean checkPassword(String username, String password) {
+    public int checkPassword(String username, String password) {
         boolean name_found = false;
 
         // check if username exists
@@ -125,8 +143,8 @@ public class ClientHandler implements Runnable {
         // register new user
         if (!name_found) {
             Server.getSql().register(username, password);
-            this.write("registered as: " + username + "\n");
-            return true;
+
+            return 3;
         }
 
         // log in existing user
