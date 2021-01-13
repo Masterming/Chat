@@ -61,7 +61,8 @@ public class Server {
 
                 // Connect with client
                 socket = server.accept();
-                // LOGGER.log(Level.INFO, "Connected to " + socket.getInetAddress().getHostName() +
+                // LOGGER.log(Level.INFO, "Connected to " +
+                // socket.getInetAddress().getHostName() +
                 // "(i=" + i + ")");
 
                 // Setup streams with client
@@ -97,7 +98,7 @@ public class Server {
             } catch (Exception e) {
                 System.exit(1);
             }
-            
+
         }
     }
 }

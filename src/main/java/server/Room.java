@@ -10,7 +10,7 @@ public class Room {
     private boolean editable;
 
     public Room(int id, String name, boolean editable) {
-        this.id = id;;
+        this.id = id;
         this.setName(name);
         users = new ArrayList<>();
         this.editable = editable;
@@ -29,7 +29,7 @@ public class Room {
     }
 
     public void setName(String name) {
-        
+
         name = name.replaceAll("[^(A-z)]", "");
         this.name = name;
     }

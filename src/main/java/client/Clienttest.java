@@ -11,7 +11,7 @@ public class Clienttest {
 
         ClientGUI test2 = new ClientGUI();
 
-        //neue Nachricht
+        // neue Nachricht
         test2.addMessage("test123");
         for (int i = 0; i < 30; i++) {
             test2.addMessage("" + i + "\n");
