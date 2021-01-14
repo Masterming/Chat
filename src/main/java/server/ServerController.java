@@ -180,8 +180,8 @@ public class ServerController {
     }
 
     public static void editRoom(int id, String name) {
-        if (rooms.get(id).isEditable()) {
-            rooms.get(id).setName(name);
+        if (getRoom(id).isEditable()) {
+            getRoom(id).setName(name);
             updategui();
             LOGGER.log(Level.INFO, "Raum editiert");
         } else {
