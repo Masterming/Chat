@@ -1,10 +1,11 @@
 package server;
 
 import java.io.*;
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.net.*;
 import java.util.*;
 import java.util.logging.*;
-
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import parser.*;
@@ -47,18 +48,19 @@ public class ClientHandler implements Runnable {
 
     public void write(Message msg) {
         String json = parser.toJson(msg);
-        System.out.println(msg);
+        System.out.println(json);
 
-        output.print(json);
+        //System.out.println(msg);
+
+        output.println(json);
         output.flush();
     }
 
     private Message read() throws IOException {
-        char[] buffer = new char[1024];
-        int count = input.read(buffer, 0, 1024);
-        String json = new String(buffer, 0, count);
+        String json = input.readLine();
+        System.out.println(json);
         Message msg = parser.fromJson(json, Message.class);
-        System.out.println(msg);
+        //System.out.println(msg);
 
         return msg;
     }
@@ -84,7 +86,7 @@ public class ClientHandler implements Runnable {
                             logged = true;
                             ServerController.getRoom(roomID).addUser(this);
                             ServerController.updategui();
-                            sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
+                            sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
                             LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
                         }
                         break;
@@ -94,7 +96,7 @@ public class ClientHandler implements Runnable {
                             break;
                         LOGGER.log(Level.INFO, "User " + id + ": " + msg.content);
                         ServerController.displayMessage("[" + name + "]: " + msg.content);
-                        sendToRoom(new Message(Type.MESSAGE, "[" + name + "]: " + msg.content));
+                        sendToRoom(new Message(MsgCode.MESSAGE, "[" + name + "]: " + msg.content));
                         break;
 
                     case GET_ACTIVE:
@@ -107,12 +109,12 @@ public class ClientHandler implements Runnable {
                                 active.add(handler.name);
                             }
                         }
-                        write(new Message(Type.GET_ACTIVE, active.toString()));
+                        write(new Message(MsgCode.GET_ACTIVE, active.toString()));
                         break;
 
                     case CHANGE_ROOM:
                         ServerController.changeRoom(Integer.parseInt(msg.content), this);
-                        sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
+                        sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
                         break;
 
                     case DISCONNECT:
@@ -133,24 +135,21 @@ public class ClientHandler implements Runnable {
 
     public boolean login(String password) {
         switch (checkPassword(name, password)) {
-            case -1: // weird stuff happened
-                write(new Message(Type.LOGIN_FAILED, "ERROR"));
-                return false;
             case 0: // logged in
-                write(new Message(Type.LOGIN_SUCCESS, "0"));
+                write(new Message(MsgCode.LOGIN_SUCCESS, "0"));
                 return true;
             case 1: // banned
-                write(new Message(Type.LOGIN_FAILED, "2"));
+                write(new Message(MsgCode.LOGIN_FAILED, "2"));
                 close();
                 return false;
             case 2: // pw wrong
-                write(new Message(Type.LOGIN_FAILED, "3"));
+                write(new Message(MsgCode.LOGIN_FAILED, "3"));
                 return false;
             case 3: // registered
-                write(new Message(Type.LOGIN_SUCCESS, "1"));
+                write(new Message(MsgCode.LOGIN_SUCCESS, "1"));
                 return true;
             default:
-                write(new Message(Type.LOGIN_FAILED, "ERROR"));
+                write(new Message(MsgCode.LOGIN_FAILED, "ERROR"));
                 return false;
         }
     }
@@ -209,5 +208,14 @@ public class ClientHandler implements Runnable {
 
 	public String getname() {
 		return name;
+	}
+
+	public void updateR(ArrayList<String>rooms) {
+        String tmp_r = parser.toJson(rooms);
+        write(new Message(MsgCode.UPDATE_ROOMS, tmp_r));
+    }
+    public void updateU(ArrayList<String> users) {
+        String tmp_u = parser.toJson(users);
+        write(new Message(MsgCode.UPDATE_USERS, tmp_u));
 	}
 }

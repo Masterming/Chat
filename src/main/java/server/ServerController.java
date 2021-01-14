@@ -35,7 +35,7 @@ public class ServerController {
         // Make an ArrayList to hold all user objects
         users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
-        rooms.put(0, new Room("Eingangshalle", false));
+        rooms.put(0, new Room("Eingangshalle, Meep", false));
         gui = new ServerView();
         updategui();
 
@@ -78,7 +78,7 @@ public class ServerController {
 
                 // Setup streams with user
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+                output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
                 output.flush();
 
                 // Create a new handler object for handling this request.
@@ -120,8 +120,25 @@ public class ServerController {
     }
 
     public static void updategui() {
+
         gui.setRooms(rooms);
         gui.setUsers(users);
+
+        ArrayList<String> tmpList_r = new ArrayList<>();
+        for (Room r : rooms.values()) {
+            tmpList_r.add(r.getName());
+        }
+
+        for (ClientHandler c : getUsers()) {
+            ArrayList<String> tmpList_u = new ArrayList<>();
+            for (ClientHandler d : getRoom(c.roomID).getUsers()) {
+                tmpList_u.add(d.getname());
+
+            }
+            c.updateR(tmpList_r);
+            c.updateU(tmpList_u);
+        }
+
     }
 
     public static void changeRoom(int destination_id, ClientHandler user) {
@@ -131,17 +148,19 @@ public class ServerController {
         updategui();
     }
 
-	public static Room getRoom(int roomID) {
-		return rooms.get(roomID);
-	}
+    public static Room getRoom(int roomID) {
+        return rooms.get(roomID);
+    }
 
     public static Map<Integer, Room> getRooms() {
         return rooms;
     }
 
     public static void addroom(Room new_room) {
-        rooms.put(new_room.getId(), new_room);
-        updategui();
+        if (!rooms.containsValue(new_room)) {
+            rooms.put(new_room.getId(), new_room);
+            updategui();
+        }
     }
 
     public static void deleteRoom(int room_id) {
@@ -163,7 +182,8 @@ public class ServerController {
             LOGGER.log(Level.WARNING, "Raum nicht editierbar");
         }
     }
-    public static void displayMessage(String msg){
+
+    public static void displayMessage(String msg) {
         gui.addMessage(msg);
     }
 }

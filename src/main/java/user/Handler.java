@@ -2,8 +2,12 @@ package user;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 import parser.*;
 
@@ -45,7 +49,8 @@ public class Handler implements Runnable {
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         output.flush();
     }
-    public void run(){
+
+    public void run() {
         recieve();
     }
 
@@ -55,7 +60,7 @@ public class Handler implements Runnable {
         while (running) {
             try {
                 Message msg = read();
-
+                Type type = new TypeToken<ArrayList<String>>(){}.getType();
                 switch (msg.type) {
                     case LOGIN:
                         break;
@@ -63,6 +68,16 @@ public class Handler implements Runnable {
                         break;
                     case MESSAGE:
                         ClientController.displayMessage(msg.content);
+                        break;
+                    case UPDATE_ROOMS:
+                        
+                        ArrayList<String> tmp_r = parser.fromJson(msg.content, type);
+                        ClientController.updateRooms(tmp_r);
+                        break;
+                    case UPDATE_USERS:
+                    
+                        ArrayList<String> tmp_u = parser.fromJson(msg.content, type);
+                        ClientController.updateUsers(tmp_u);
                         break;
                 }
                 System.out.println(msg.content);
@@ -73,19 +88,20 @@ public class Handler implements Runnable {
     }
 
     private Message read() throws IOException {
-        char[] buffer = new char[1024];
-        int count = input.read(buffer, 0, 1024);
-        String json = new String(buffer, 0, count);
+        String json = input.readLine();
+        System.out.println(json);
         Message msg = parser.fromJson(json, Message.class);
-        System.out.println(msg);
+        
+        //System.out.println(msg);
 
         return msg;
     }
 
     public void write(Message msg) {
         String json = parser.toJson(msg);
-        System.out.println(msg);
-        output.print(json);
+        //System.out.println(msg);
+        System.out.println(json);
+        output.println(json);
         output.flush();
     }
 
@@ -103,9 +119,9 @@ public class Handler implements Runnable {
     }
 
     public boolean login(String name, String pw) {
-        write(new Message(Type.LOGIN_NAME, name));
+        write(new Message(MsgCode.LOGIN_NAME, name));
         setName(name);
-        write(new Message(Type.LOGIN_PW, pw));
+        write(new Message(MsgCode.LOGIN_PW, pw));
         try {
             Message msg = read();
 
@@ -114,7 +130,7 @@ public class Handler implements Runnable {
                     logged = true;
                     break;
                 case LOGIN_FAILED:
-                    if (msg.content.equals("3")) {
+                    if (msg.content.equals("2")) {
                         close();
                     }
                     logged = false;

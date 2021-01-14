@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -107,13 +108,13 @@ public class ClientView implements ActionListener {
     }
 
     // Raumliste aktualisieren
-    public void setRooms(String[] r) {
-        rooms.setListData(r);
+    public void setRooms(ArrayList<String> r) {
+        rooms.setListData(r.toArray(new String[0]));
     }
 
     // Nutzerliste aktualisieren
-    public void setUsers(String[] u) {
-        users.setListData(u);
+    public void setUsers(ArrayList<String> u) {
+        users.setListData(u.toArray(new String[0]));
     }
 
     // Nutzernamen anzeigen
@@ -152,4 +153,5 @@ public class ClientView implements ActionListener {
                 break;
         }
     }
+
 }

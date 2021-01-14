@@ -2,10 +2,11 @@ package user;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import parser.Message;
-import parser.Type;
+import parser.MsgCode;
 
 /**
  * @author blechner
@@ -42,12 +43,17 @@ public class ClientController {
         return handler.getName();
     }
 	public static void send(String message) {
-        Message msg = new Message(Type.MESSAGE, message);
+        Message msg = new Message(MsgCode.MESSAGE, message);
         handler.write(msg);
 	}
 
 	public static void displayMessage(String m) {
         gui.addMessage(m);
 	}
-
+    public static void updateRooms(ArrayList<String> tmp){
+        gui.setRooms(tmp);
+    }
+    public static void updateUsers(ArrayList<String> tmp){
+        gui.setUsers(tmp);
+    }
 }

@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Room {
 
@@ -55,4 +56,21 @@ public class Room {
     public String toString() {
         return (name + "[" + users.size() + "]");
     }
+    @Override
+            public boolean equals(Object o) {
+            // self check
+            if (this == o)
+                return true;
+            // null check
+            if (o == null)
+                return false;
+            // type check and cast
+            if (getClass() != o.getClass())
+                return false;
+            Room f = (Room) o;
+            // field comparison
+            return f.name.equals(this.name);
+
+        }
+    
 }
