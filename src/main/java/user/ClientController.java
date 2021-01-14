@@ -56,4 +56,9 @@ public class ClientController {
     public static void updateUsers(ArrayList<String> tmp){
         gui.setUsers(tmp);
     }
+
+	public static void changeRoom(String room) {
+        handler.write(new Message(MsgCode.CHANGE_ROOM, room));
+        
+	}
 }

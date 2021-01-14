@@ -143,9 +143,8 @@ public class ClientView implements ActionListener {
                 if (rooms.getSelectedIndex() == -1) {
                     addMessage("Bitte wähle erst einen Raum aus.");
                 } else {
-                    int room = rooms.getSelectedIndex();
-                    LOGGER.log(Level.INFO, "Entered room" + room);
-                    // TODO: join room
+                    String room = rooms.getSelectedValue();
+                    ClientController.changeRoom(room);
                 }
                 break;
 

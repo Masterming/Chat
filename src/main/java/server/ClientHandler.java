@@ -113,7 +113,7 @@ public class ClientHandler implements Runnable {
                         break;
 
                     case CHANGE_ROOM:
-                        ServerController.changeRoom(Integer.parseInt(msg.content), this);
+                        ServerController.changeRoom(msg.content, this);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
                         break;
 
