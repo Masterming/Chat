@@ -93,7 +93,7 @@ public class User {
             output.close();
             socket.close();
             System.exit(0);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.exit(1);
         }
     }
