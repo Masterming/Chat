@@ -6,9 +6,9 @@ import java.net.*;
 /**
  * @author blechner
  */
-public class User {
-    private UserGUI gui;
-    private LoginGUI login_gui;
+public class ClientController {
+    private ClientView gui;
+    private LoginView login_gui;
     private boolean logged;
     private Socket socket;
     private BufferedReader input;
@@ -18,7 +18,7 @@ public class User {
     private final String ip;
     private final int port;
 
-    public User(String ip, int port) {
+    public ClientController(String ip, int port) {
         this.ip = ip;
         this.port = port;
 
@@ -30,9 +30,9 @@ public class User {
             setup();
             new Thread(() -> recieve()).start();
             new Thread(() -> consoleWrite()).start();
-            login_gui = new LoginGUI();
+            login_gui = new LoginView();
             if (logged){
-                gui = new UserGUI();
+                gui = new ClientView();
             }
         } catch (IOException e) {
             close();

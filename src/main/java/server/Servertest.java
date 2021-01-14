@@ -6,9 +6,9 @@ import java.util.logging.*;
 /**
  * @author blechner
  */
-public class Servertest {
+public class ServerTest {
 
-    private final static Logger LOGGER = Logger.getLogger(Servertest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ServerTest.class.getName());
 
     public static void main(String[] args) {
         // Custom logging
@@ -20,7 +20,7 @@ public class Servertest {
             LOGGER.warning(ex.getLocalizedMessage());
         }
 
-        Server server = new Server(4999);
+        ServerController server = new ServerController(4999);
         server.run();
 
         System.out.println("Press enter to exit ...");

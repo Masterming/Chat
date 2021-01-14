@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UserGUI implements ActionListener {
+public class ClientView implements ActionListener {
 
-    private final static Logger LOGGER = Logger.getLogger(UserGUI.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ClientView.class.getName());
 
     private JFrame frame;
     private JPanel panel;
@@ -30,7 +30,7 @@ public class UserGUI implements ActionListener {
     private JButton join;
     private JPanel roomWbutton;
 
-    public UserGUI() {
+    public ClientView() {
 
         frame = new JFrame();
         panel = new JPanel(new BorderLayout());

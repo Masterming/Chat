@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Room {
 
     private int id;
-    private ArrayList<UserHandler> users;
+    private ArrayList<ClientHandler> users;
     private String name;
     private boolean editable;
     private static int id_count = 0;
@@ -40,15 +40,15 @@ public class Room {
         return users.size();
     }
 
-    public ArrayList<UserHandler> getUsers() {
+    public ArrayList<ClientHandler> getUsers() {
         return users;
     }
 
-    public void addUser(UserHandler c) {
+    public void addUser(ClientHandler c) {
         users.add(c);
     }
 
-    public void removeUser(UserHandler c) {
+    public void removeUser(ClientHandler c) {
         users.remove(c);
     }
 
