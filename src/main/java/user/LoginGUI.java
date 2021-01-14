@@ -1,6 +1,9 @@
 package user;
 
 import javax.swing.*;
+
+
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +17,7 @@ public class LoginGUI implements ActionListener {
     private JTextField nameText;
     private JPasswordField passwortText;
     private JButton login;
-
+    
     public LoginGUI() {
 
         frame = new JFrame();
@@ -45,11 +48,15 @@ public class LoginGUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == login) {
+
             String name = nameText.getText();
             char[] passw = passwortText.getPassword();
             String password = new String(passw);
 
             // TODO: anmeldung
+
+            //type login_name msg
+            //type login_pw msg
 
             frame.dispose();
         }

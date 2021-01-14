@@ -92,7 +92,7 @@ public class UserHandler implements Runnable {
                         break;
 
                     case CHANGE_ROOM:
-                        // TODO: change room
+                        Server.changeRoom(Integer.parseInt(msg.content), this);
                         sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
                         break;
 
