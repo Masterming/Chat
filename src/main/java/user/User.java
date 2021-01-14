@@ -2,15 +2,11 @@ package user;
 
 import java.io.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author blechner
  */
 public class User {
-
-    private final static Logger LOGGER = Logger.getLogger(User.class.getName());
     private UserGUI gui;
     private LoginGUI login_gui;
     private boolean logged;
@@ -46,14 +42,12 @@ public class User {
     private void connect() throws IOException {
         socket = new Socket(InetAddress.getByName(ip), port);
         System.out.println("Connected to: " + ip + ":" + port);
-        LOGGER.log(Level.INFO, "Connected to: " + ip + ":" + port);
     }
 
     private void setup() throws IOException {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         output.flush();
-        LOGGER.log(Level.INFO, "Stream Setup complete.");
     }
 
     private void write(String msg) {

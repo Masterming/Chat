@@ -1,0 +1,5 @@
+package parser;
+
+public enum Type {
+	MESSAGE, LOGIN, LOGIN_NAME, LOGIN_PW, ERROR, DISCONNECT, GET_ACTIVE, CHANGE_ROOM
+}

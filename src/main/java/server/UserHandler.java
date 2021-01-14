@@ -5,6 +5,10 @@ import java.net.*;
 import java.util.*;
 import java.util.logging.*;
 
+import com.google.gson.Gson;
+
+import parser.*;
+
 /**
  * @author blechner
  */
@@ -15,11 +19,14 @@ public class UserHandler implements Runnable {
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
+    private final Gson parser;
+
     private final int id;
     private String name;
     public int roomID;
-    private boolean running;
     private boolean logged;
+
+    private boolean running;
 
     public UserHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
         this.socket = s;
@@ -28,42 +35,74 @@ public class UserHandler implements Runnable {
         this.id = id;
         this.name = name;
         this.roomID = 0;
+        this.running = true;
+        this.logged = false;
+        this.parser = new Gson();
     }
 
     @Override
     public void run() {
-        running = true;
-        logged = false;
-
-        login();
-        if (logged) {
-            Server.getRooms().get(roomID).addUser(this);
-            Server.updategui();
-            printActive();
-            printNew();
-            recieve();
-        }
-        this.close();
-
+        recieve();
     }
-    // recieve message and share it with all remaining users
 
     private void recieve() {
         // blocking
         running = true;
-        char[] buffer = new char[1024];
-        int count;
 
         while (running) {
             try {
-                count = input.read(buffer, 0, 1024);
-                String s = new String(buffer, 0, count);
-                LOGGER.log(Level.INFO, "User " + id + ": " + s);
+                Message msg = read();
+                switch (msg.type) {
+                    case LOGIN_NAME: // Set user
+                        String username = msg.content;
+                        username = username.toLowerCase();
+                        name = username.replaceAll("[^(a-z)]", "");
+                        break;
 
-                for (UserHandler handler : Server.getUsersInRoom(roomID)) {
-                    if (handler.id != this.id) {
-                        handler.write("[" + name + "]: " + s + "\n");
-                    }
+                    case LOGIN_PW: // Try to login active user
+                        String password = msg.content;
+                        password = password.replaceAll("[^(A-z)]", "");
+                        if (login(password)) {
+                            logged = true;
+                            Server.getRoom(roomID).addUser(this);
+                            Server.updategui();
+                            sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
+                            LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
+                        }
+                        break;
+
+                    case MESSAGE: // Send message in room
+                        if (!logged)
+                            break;
+                        LOGGER.log(Level.INFO, "User " + id + ": " + msg.content);
+                        sendToRoom(new Message(Type.MESSAGE, "[" + name + "]: " + msg.content));
+                        break;
+
+                    case GET_ACTIVE:
+                        if (!logged)
+                            break;
+                        List<String> active = new ArrayList<>();
+                        for (UserHandler handler : Server.getUsers()) {
+                            // Only show users, who are connected and logged in
+                            if (handler.id != this.id && handler.logged) {
+                                active.add(handler.name);
+                            }
+                        }
+                        write(new Message(Type.GET_ACTIVE, active.toString()));
+                        break;
+
+                    case CHANGE_ROOM:
+                        // TODO: change room
+                        sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
+                        break;
+
+                    case DISCONNECT:
+                        // Server.
+                        close();
+                        return;
+
+                    default:
+                        break;
                 }
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
@@ -73,59 +112,41 @@ public class UserHandler implements Runnable {
         close();
     }
 
-    private void write(String msg) {
-        output.print(msg);
+    private void write(Message msg) {
+        String json = parser.toJson(msg);
+        output.print(json);
         output.flush();
     }
 
-    public void login() {
-        String password;
-        String username;
-
+    private Message read() throws IOException {
         char[] buffer = new char[1024];
-        int count;
+        int count = input.read(buffer, 0, 1024);
+        String json = new String(buffer, 0, count);
+        Message msg = parser.fromJson(json, Message.class);
+        return msg;
+    }
 
-        try {
-            write("Enter name: ");
-            count = input.read(buffer, 0, 1024);
-            username = new String(buffer, 0, count);
-            username = username.toLowerCase();
-            username = username.replaceAll("[^(a-z)]", "");
-
-            write("Enter password: ");
-            count = input.read(buffer, 0, 1024);
-            password = new String(buffer, 0, count);
-            password = password.replaceAll("[^(A-z)]", "");
-
-            switch (checkPassword(username, password)) {
-                case -1: // weird stuff happened
-                    write("something went wrong on our side, please try again later\n");
-                    login();
-                    break;
-                case 0: // logged in
-                    this.write("login as: " + username + " successful\n");
-                    name = username;
-                    logged = true;
-                    break;
-                case 1: // banned
-                    write("You are banned.\n");
-                    close();
-                    break;
-                case 2: // pw wrong
-                    write("Wrong password.\n");
-                    login();
-                    break;
-                case 3: // registered
-                    this.write("registered as: " + username + "\n");
-                    name = username;
-                    logged = true;
-                    break;
-                default:
-                    break;
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-            close();
+    public boolean login(String password) {
+        switch (checkPassword(name, password)) {
+            case -1: // weird stuff happened
+                write(new Message(Type.ERROR, "ERROR"));
+                return false;
+            case 0: // logged in
+                write(new Message(Type.LOGIN, "0"));
+                return true;
+            case 1: // banned
+                write(new Message(Type.LOGIN, "1"));
+                close();
+                return false;
+            case 2: // pw wrong
+                write(new Message(Type.LOGIN, "2"));
+                return false;
+            case 3: // registered
+                write(new Message(Type.LOGIN, "3"));
+                return true;
+            default:
+                write(new Message(Type.ERROR, "ERROR"));
+                return false;
         }
     }
 
@@ -143,7 +164,6 @@ public class UserHandler implements Runnable {
         // register new user
         if (!name_found) {
             Server.getSql().register(username, password);
-
             return 3;
         }
 
@@ -151,24 +171,11 @@ public class UserHandler implements Runnable {
         return Server.getSql().login(username, password);
     }
 
-    private void printActive() {
-        List<String> active = new ArrayList<>();
-        for (UserHandler handler : Server.getUsers()) {
-            // Only show users, who are connected and logged in
+    private void sendToRoom(Message msg) {
+        for (UserHandler handler : Server.getRoom(roomID).getUsers()) {
+            // Only show to users, who are connected and logged in the same room
             if (handler.id != this.id && handler.logged) {
-                active.add(handler.name);
-            }
-        }
-        write("[System]: Currently online: " + active.toString() + "\n");
-        // write("-------------------------------------------------------------\n\n");
-    }
-
-    private void printNew() {
-        for (UserHandler handler : Server.getUsers()) {
-            // Only show to users, who are connected and logged in
-            if (handler.id != this.id && handler.logged) {
-                handler.write("[System]: " + name + " connected\n");
-                LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
+                handler.write(msg);
             }
         }
     }
@@ -186,11 +193,12 @@ public class UserHandler implements Runnable {
             LOGGER.log(Level.INFO, "Connection closed");
         }
     }
-    public boolean getlogged(){
+
+    public boolean getlogged() {
         return logged;
     }
 
     public String toString() {
-        return ("[" + Server.getRooms().get(roomID).getName() + "] " + name);
+        return ("[" + Server.getRoom(roomID).getName() + "] " + name);
     }
 }

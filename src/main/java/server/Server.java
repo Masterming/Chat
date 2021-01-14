@@ -122,17 +122,16 @@ public class Server {
         gui.setUsers(users);
     }
 
-    public static List<UserHandler> getUsersInRoom(int id) {
-        // TODO: get Room and users
-        return null;
-    }
-
     public static void changeRoom(int destination_id, UserHandler user) {
         rooms.get(user.roomID).removeUser(user);
         user.roomID = destination_id;
         rooms.get(user.roomID).addUser(user);
         updategui();
     }
+
+	public static Room getRoom(int roomID) {
+		return rooms.get(roomID);
+	}
 
     public static Map<Integer, Room> getRooms() {
         return rooms;
@@ -158,8 +157,7 @@ public class Server {
             rooms.get(id).setName(name);
             updategui();
             LOGGER.log(Level.INFO, "Raum editiert");
-        }
-        else{
+        } else {
             LOGGER.log(Level.WARNING, "Raum nicht editierbar");
         }
     }
