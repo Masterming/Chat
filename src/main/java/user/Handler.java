@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import parser.*;
 
-public class Handler {
+public class Handler implements Runnable {
 
     private final Gson parser;
     private boolean logged;
@@ -24,7 +24,11 @@ public class Handler {
         this.ip = ip;
         this.port = port;
         this.parser = new Gson();
-        run();
+        try {
+            setup();
+        } catch (IOException e) {
+
+        }
     }
 
     public String getName() {
@@ -35,27 +39,14 @@ public class Handler {
         this.name = name;
     }
 
-    public void run() {
-        try {
-            connect();
-            setup();
-            // new Thread(() -> recieve()).start();
-            // new Thread(() -> consoleWrite()).start();
-
-        } catch (IOException e) {
-            close();
-        }
-    }
-
     private void setup() throws IOException {
+        socket = new Socket(InetAddress.getByName(ip), port);
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         output.flush();
     }
-
-    private void connect() throws IOException {
-        socket = new Socket(InetAddress.getByName(ip), port);
-        // System.out.println("Connected to: " + ip + ":" + port);
+    public void run(){
+        recieve();
     }
 
     private void recieve() {
@@ -71,6 +62,7 @@ public class Handler {
                     case ERROR:
                         break;
                     case MESSAGE:
+                        ClientController.displayMessage(msg.content);
                         break;
                 }
                 System.out.println(msg.content);

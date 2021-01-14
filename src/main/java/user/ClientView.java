@@ -103,7 +103,7 @@ public class ClientView implements ActionListener {
 
     // Nachricht ins Chatfenster schreiben
     public void addMessage(String m) {
-        chat.append("[" + ClientController.getClientname() + "]: " + m+"\n");
+        chat.append( m+"\n");
     }
 
     // Raumliste aktualisieren
@@ -134,7 +134,7 @@ public class ClientView implements ActionListener {
                 String message = text.getText();
                 text.setText("");
                 ClientController.send(message);
-                addMessage(message);
+                addMessage("[" + ClientController.getClientname() + "]: " +message);
                 
                 break;
 

@@ -22,7 +22,7 @@ public class ClientController {
 
         handler = new Handler(ip, port);
         login_gui = new LoginView();
-            
+         
     }
 
     public static boolean login(String name, String pw) {
@@ -30,17 +30,24 @@ public class ClientController {
         System.out.println(logged);
         if (logged) {
             gui = new ClientView();
+            Thread t = new Thread(handler);
+            t.start();
+            
         }
         return logged;
 
     }
-    
+
     public static String getClientname(){
         return handler.getName();
     }
 	public static void send(String message) {
         Message msg = new Message(Type.MESSAGE, message);
         handler.write(msg);
+	}
+
+	public static void displayMessage(String m) {
+        gui.addMessage(m);
 	}
 
 }
