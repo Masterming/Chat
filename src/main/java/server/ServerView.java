@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
-public class ServerGUI implements ActionListener, ListSelectionListener {
+public class ServerView implements ActionListener, ListSelectionListener {
 
     private JFrame frame;
     private JPanel panel;
@@ -24,7 +24,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
     private JPanel aufgabe;
     private TextArea chat;
     private JTabbedPane statusAuswahl;
-    private JList<UserHandler> users;
+    private JList<ClientHandler> users;
     private JList<Room> rooms;
     private JTextField text;
     private JButton ok;
@@ -56,7 +56,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
     private JButton banButton;
     private JPanel aufgabeSouth;
 
-    public ServerGUI() {
+    public ServerView() {
 
         frame = new JFrame();
         panel = new JPanel(new BorderLayout());
@@ -218,9 +218,9 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
         rooms.setListData(r.values().toArray(new Room[0]));
     }
 
-    public void setUsers(List<UserHandler> c) {
+    public void setUsers(List<ClientHandler> c) {
 
-        users.setListData(c.toArray(new UserHandler[0]));
+        users.setListData(c.toArray(new ClientHandler[0]));
     }
 
     public void setInformationRoom(Room room) {
@@ -282,7 +282,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
                 Boolean edit = editierbar.isSelected();
                 newRoom.setVisible(false);
 
-                Server.addroom(new Room(roomname, edit));
+                ServerController.addroom(new Room(roomname, edit));
 
             }
         } else if (e.getSource() == deleteRButton) {
@@ -292,7 +292,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
                 Room room = rooms.getSelectedValue();
                 deleteRoom.setVisible(false);
 
-                Server.deleteRoom(room.getId());
+                ServerController.deleteRoom(room.getId());
             }
 
         } else if (e.getSource() == editRButton) {
@@ -306,7 +306,7 @@ public class ServerGUI implements ActionListener, ListSelectionListener {
                     Room room = rooms.getSelectedValue();
                     editRoom.setVisible(false);
 
-                    Server.editRoom(room.getId(), name);
+                    ServerController.editRoom(room.getId(), name);
                 }
             }
         } else if (e.getSource() == warnButton) {

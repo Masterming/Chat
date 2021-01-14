@@ -8,18 +8,18 @@ import java.util.logging.*;
 /**
  * @author blechner
  */
-public class Server {
+public class ServerController {
 
-    private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ServerController.class.getName());
 
     private ServerSocket server;
 
     private final int port;
     private boolean running;
-    private static List<UserHandler> users;
+    private static List<ClientHandler> users;
     private static Map<Integer, Room> rooms;
     private static int i;
-    private static ServerGUI gui;
+    private static ServerView gui;
 
     private static SQLSocket sql;
 
@@ -27,14 +27,14 @@ public class Server {
         return sql;
     }
 
-    public Server(int port) {
+    public ServerController(int port) {
         this.port = port;
 
         // Make an ArrayList to hold all user objects
         users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
         rooms.put(0, new Room("Eingangshalle", false));
-        gui = new ServerGUI();
+        gui = new ServerView();
         updategui();
 
         // gui.setInformationRoom();
@@ -80,7 +80,7 @@ public class Server {
                 output.flush();
 
                 // Create a new handler object for handling this request.
-                UserHandler c = new UserHandler(socket, input, output, i, "User" + i);
+                ClientHandler c = new ClientHandler(socket, input, output, i, "User" + i);
 
                 users.add(c);
                 Thread t = new Thread(c);
@@ -93,9 +93,9 @@ public class Server {
     }
 
     // Getter
-    public static List<UserHandler> getUsers() {
-        List<UserHandler> loggedUsers = new ArrayList<>();
-        for (UserHandler u : users) {
+    public static List<ClientHandler> getUsers() {
+        List<ClientHandler> loggedUsers = new ArrayList<>();
+        for (ClientHandler u : users) {
             if (u.getlogged()) {
                 loggedUsers.add(u);
             }
@@ -122,7 +122,7 @@ public class Server {
         gui.setUsers(users);
     }
 
-    public static void changeRoom(int destination_id, UserHandler user) {
+    public static void changeRoom(int destination_id, ClientHandler user) {
         rooms.get(user.roomID).removeUser(user);
         user.roomID = destination_id;
         rooms.get(user.roomID).addUser(user);
@@ -144,7 +144,7 @@ public class Server {
 
     public static void deleteRoom(int room_id) {
         if (rooms.get(room_id).isEditable()) {
-            for (UserHandler c : rooms.get(room_id).getUsers()) {
+            for (ClientHandler c : rooms.get(room_id).getUsers()) {
                 changeRoom(0, c);
             }
             rooms.remove(room_id);

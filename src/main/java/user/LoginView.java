@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginGUI implements ActionListener {
+public class LoginView implements ActionListener {
 
     private JFrame frame;
     private JPanel panel;
@@ -17,8 +17,13 @@ public class LoginGUI implements ActionListener {
     private JTextField nameText;
     private JPasswordField passwortText;
     private JButton login;
+<<<<<<< HEAD:src/main/java/user/LoginGUI.java
     
     public LoginGUI() {
+=======
+
+    public LoginView() {
+>>>>>>> fd603877feb441db9116f30dde302234b3e1a838:src/main/java/user/LoginView.java
 
         frame = new JFrame();
         panel = new JPanel(new GridLayout(3, 2));

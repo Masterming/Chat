@@ -12,9 +12,9 @@ import parser.*;
 /**
  * @author blechner
  */
-public class UserHandler implements Runnable {
+public class ClientHandler implements Runnable {
 
-    private final static Logger LOGGER = Logger.getLogger(UserHandler.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 
     private Socket socket;
     private BufferedReader input;
@@ -28,7 +28,7 @@ public class UserHandler implements Runnable {
 
     private boolean running;
 
-    public UserHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
+    public ClientHandler(Socket s, BufferedReader in, PrintWriter out, int id, String name) {
         this.socket = s;
         this.input = in;
         this.output = out;
@@ -64,8 +64,8 @@ public class UserHandler implements Runnable {
                         password = password.replaceAll("[^(A-z)]", "");
                         if (login(password)) {
                             logged = true;
-                            Server.getRoom(roomID).addUser(this);
-                            Server.updategui();
+                            ServerController.getRoom(roomID).addUser(this);
+                            ServerController.updategui();
                             sendToRoom(new Message(Type.MESSAGE, "[System]: " + name + " connected\n"));
                             LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
                         }
@@ -82,7 +82,7 @@ public class UserHandler implements Runnable {
                         if (!logged)
                             break;
                         List<String> active = new ArrayList<>();
-                        for (UserHandler handler : Server.getUsers()) {
+                        for (ClientHandler handler : ServerController.getUsers()) {
                             // Only show users, who are connected and logged in
                             if (handler.id != this.id && handler.logged) {
                                 active.add(handler.name);
@@ -154,7 +154,7 @@ public class UserHandler implements Runnable {
         boolean name_found = false;
 
         // check if username exists
-        for (String un : Server.getSql().getAllUser()) {
+        for (String un : ServerController.getSql().getAllUser()) {
             if (username.equals(un)) {
                 name_found = true;
                 break;
@@ -163,16 +163,16 @@ public class UserHandler implements Runnable {
 
         // register new user
         if (!name_found) {
-            Server.getSql().register(username, password);
+            ServerController.getSql().register(username, password);
             return 3;
         }
 
         // log in existing user
-        return Server.getSql().login(username, password);
+        return ServerController.getSql().login(username, password);
     }
 
     private void sendToRoom(Message msg) {
-        for (UserHandler handler : Server.getRoom(roomID).getUsers()) {
+        for (ClientHandler handler : ServerController.getRoom(roomID).getUsers()) {
             // Only show to users, who are connected and logged in the same room
             if (handler.id != this.id && handler.logged) {
                 handler.write(msg);
@@ -199,6 +199,6 @@ public class UserHandler implements Runnable {
     }
 
     public String toString() {
-        return ("[" + Server.getRoom(roomID).getName() + "] " + name);
+        return ("[" + ServerController.getRoom(roomID).getName() + "] " + name);
     }
 }
