@@ -1,6 +1,9 @@
 package user;
 
 import javax.swing.*;
+
+
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +48,7 @@ public class LoginView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == login) {
+
             String name = nameText.getText();
             char[] passw = passwortText.getPassword();
             String password = new String(passw);
