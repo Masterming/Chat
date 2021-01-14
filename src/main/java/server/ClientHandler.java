@@ -47,6 +47,8 @@ public class ClientHandler implements Runnable {
 
     private void write(Message msg) {
         String json = parser.toJson(msg);
+        System.out.println(msg);
+
         output.print(json);
         output.flush();
     }
@@ -56,6 +58,8 @@ public class ClientHandler implements Runnable {
         int count = input.read(buffer, 0, 1024);
         String json = new String(buffer, 0, count);
         Message msg = parser.fromJson(json, Message.class);
+        System.out.println(msg);
+
         return msg;
     }
 
@@ -129,23 +133,23 @@ public class ClientHandler implements Runnable {
     public boolean login(String password) {
         switch (checkPassword(name, password)) {
             case -1: // weird stuff happened
-                write(new Message(Type.ERROR, "ERROR"));
+                write(new Message(Type.LOGIN_FAILED, "ERROR"));
                 return false;
             case 0: // logged in
-                write(new Message(Type.LOGIN, "0"));
+                write(new Message(Type.LOGIN_SUCCESS, "0"));
                 return true;
             case 1: // banned
-                write(new Message(Type.LOGIN, "1"));
+                write(new Message(Type.LOGIN_FAILED, "2"));
                 close();
                 return false;
             case 2: // pw wrong
-                write(new Message(Type.LOGIN, "2"));
+                write(new Message(Type.LOGIN_FAILED, "3"));
                 return false;
             case 3: // registered
-                write(new Message(Type.LOGIN, "3"));
+                write(new Message(Type.LOGIN_SUCCESS, "1"));
                 return true;
             default:
-                write(new Message(Type.ERROR, "ERROR"));
+                write(new Message(Type.LOGIN_FAILED, "ERROR"));
                 return false;
         }
     }

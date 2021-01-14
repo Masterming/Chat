@@ -8,4 +8,7 @@ public class Message {
         this.type = type;
         this.content = content;
     }
+    public String toString(){
+        return (this.type +": "+this.content);
+    }
 }
