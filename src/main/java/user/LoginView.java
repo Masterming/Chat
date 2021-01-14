@@ -48,10 +48,12 @@ public class LoginView implements ActionListener {
             String name = nameText.getText();
             char[] passw = passwortText.getPassword();
             String password = new String(passw);
+            boolean success = false;
 
             // TODO: anmeldung
-
-            frame.dispose();
+            
+            if (success)
+                frame.dispose();
         }
     }
 }

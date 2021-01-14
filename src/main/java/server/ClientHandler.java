@@ -45,6 +45,20 @@ public class ClientHandler implements Runnable {
         recieve();
     }
 
+    private void write(Message msg) {
+        String json = parser.toJson(msg);
+        output.print(json);
+        output.flush();
+    }
+
+    private Message read() throws IOException {
+        char[] buffer = new char[1024];
+        int count = input.read(buffer, 0, 1024);
+        String json = new String(buffer, 0, count);
+        Message msg = parser.fromJson(json, Message.class);
+        return msg;
+    }
+
     private void recieve() {
         // blocking
         running = true;
@@ -110,20 +124,6 @@ public class ClientHandler implements Runnable {
             }
         }
         close();
-    }
-
-    private void write(Message msg) {
-        String json = parser.toJson(msg);
-        output.print(json);
-        output.flush();
-    }
-
-    private Message read() throws IOException {
-        char[] buffer = new char[1024];
-        int count = input.read(buffer, 0, 1024);
-        String json = new String(buffer, 0, count);
-        Message msg = parser.fromJson(json, Message.class);
-        return msg;
     }
 
     public boolean login(String password) {

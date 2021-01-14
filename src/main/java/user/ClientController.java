@@ -3,10 +3,15 @@ package user;
 import java.io.*;
 import java.net.*;
 
+import com.google.gson.Gson;
+
+import parser.*;
+
 /**
  * @author blechner
  */
 public class ClientController {
+    private final Gson parser;
     private ClientView gui;
     private LoginView login_gui;
     private boolean logged;
@@ -21,7 +26,7 @@ public class ClientController {
     public ClientController(String ip, int port) {
         this.ip = ip;
         this.port = port;
-
+        this.parser = new Gson();
     }
 
     public void run() {
@@ -31,12 +36,26 @@ public class ClientController {
             new Thread(() -> recieve()).start();
             new Thread(() -> consoleWrite()).start();
             login_gui = new LoginView();
-            if (logged){
+            if (logged) {
                 gui = new ClientView();
             }
         } catch (IOException e) {
             close();
         }
+    }
+
+    private void write(Message msg) {
+        String json = parser.toJson(msg);
+        output.print(json);
+        output.flush();
+    }
+
+    private Message read() throws IOException {
+        char[] buffer = new char[1024];
+        int count = input.read(buffer, 0, 1024);
+        String json = new String(buffer, 0, count);
+        Message msg = parser.fromJson(json, Message.class);
+        return msg;
     }
 
     private void connect() throws IOException {
@@ -50,21 +69,13 @@ public class ClientController {
         output.flush();
     }
 
-    private void write(String msg) {
-        output.print(msg);
-        output.flush();
-        // System.out.println(msg);
-    }
-
     private void recieve() {
         running = true;
 
         while (running) {
-            char[] buffer = new char[1024];
             try {
-                input.read(buffer, 0, 1024); // blocking
-                System.out.print(String.valueOf(buffer));
-                // System.out.flush();
+                Message msg = read();
+                System.out.println(msg.content);
             } catch (IOException e) {
                 close();
             }
@@ -78,7 +89,7 @@ public class ClientController {
             String msg;
             try {
                 if ((msg = buffer.readLine()) != null)
-                    write(msg);
+                    write(new Message(Type.MESSAGE, msg));
             } catch (IOException e) {
                 close();
             }
