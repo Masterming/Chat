@@ -125,14 +125,14 @@ public class ServerController {
     }
 
     public static void changeRoom(int destination_id, ClientHandler user) {
-        rooms.get(user.roomID).removeUser(user);
+        getRoom(user.roomID).removeUser(user);
         user.roomID = destination_id;
-        rooms.get(user.roomID).addUser(user);
+        getRoom(user.roomID).addUser(user);
         updategui();
     }
 
 	public static Room getRoom(int roomID) {
-		return rooms.get(roomID);
+		return getRoom(roomID);
 	}
 
     public static Map<Integer, Room> getRooms() {
@@ -145,8 +145,8 @@ public class ServerController {
     }
 
     public static void deleteRoom(int room_id) {
-        if (rooms.get(room_id).isEditable()) {
-            for (ClientHandler c : rooms.get(room_id).getUsers()) {
+        if (getRoom(room_id).isEditable()) {
+            for (ClientHandler c : getRoom(room_id).getUsers()) {
                 changeRoom(0, c);
             }
             rooms.remove(room_id);
@@ -155,8 +155,8 @@ public class ServerController {
     }
 
     public static void editRoom(int id, String name) {
-        if (rooms.get(id).isEditable()) {
-            rooms.get(id).setName(name);
+        if (getRoom(id).isEditable()) {
+            getRoom(id).setName(name);
             updategui();
             LOGGER.log(Level.INFO, "Raum editiert");
         } else {
