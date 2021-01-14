@@ -211,7 +211,7 @@ public class ServerView implements ActionListener, ListSelectionListener {
     }
 
     public void addMessage(String m) {
-        chat.append("\n" + m);
+        chat.append(m);
     }
 
     public void setRooms(Map<Integer, Room> r) {

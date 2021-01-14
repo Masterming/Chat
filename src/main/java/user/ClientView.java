@@ -103,7 +103,7 @@ public class ClientView implements ActionListener {
 
     // Nachricht ins Chatfenster schreiben
     public void addMessage(String m) {
-        chat.append("\n" + m);
+        chat.append("[" + ClientController.getClientname() + "]: " + m+"\n");
     }
 
     // Raumliste aktualisieren
@@ -130,14 +130,15 @@ public class ClientView implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case "send":
+            case "Senden":
                 String message = text.getText();
                 text.setText("");
+                ClientController.send(message);
                 addMessage(message);
-                // TODO: send message
+                
                 break;
 
-            case "join":
+            case "Beitreten":
                 if (rooms.getSelectedIndex() == -1) {
                     addMessage("Bitte wähle erst einen Raum aus.");
                 } else {

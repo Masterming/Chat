@@ -2,6 +2,10 @@ package user;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+
+import parser.Message;
+import parser.Type;
 
 /**
  * @author blechner
@@ -23,11 +27,20 @@ public class ClientController {
 
     public static boolean login(String name, String pw) {
         logged = handler.login(name, pw);
+        System.out.println(logged);
         if (logged) {
             gui = new ClientView();
         }
         return logged;
 
     }
+    
+    public static String getClientname(){
+        return handler.getName();
+    }
+	public static void send(String message) {
+        Message msg = new Message(Type.MESSAGE, message);
+        handler.write(msg);
+	}
 
 }

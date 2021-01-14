@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable {
         recieve();
     }
 
-    private void write(Message msg) {
+    public void write(Message msg) {
         String json = parser.toJson(msg);
         System.out.println(msg);
 
@@ -93,6 +93,7 @@ public class ClientHandler implements Runnable {
                         if (!logged)
                             break;
                         LOGGER.log(Level.INFO, "User " + id + ": " + msg.content);
+                        ServerController.displayMessage("[" + name + "]: " + msg.content);
                         sendToRoom(new Message(Type.MESSAGE, "[" + name + "]: " + msg.content));
                         break;
 
@@ -205,4 +206,8 @@ public class ClientHandler implements Runnable {
     public String toString() {
         return ("[" + ServerController.getRoom(roomID).getName() + "] " + name);
     }
+
+	public String getname() {
+		return name;
+	}
 }

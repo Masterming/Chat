@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.*;
 import java.util.logging.*;
 
+import parser.*;
+
 /**
  * @author blechner
  */
@@ -160,5 +162,8 @@ public class ServerController {
         } else {
             LOGGER.log(Level.WARNING, "Raum nicht editierbar");
         }
+    }
+    public static void displayMessage(String msg){
+        gui.addMessage(msg);
     }
 }

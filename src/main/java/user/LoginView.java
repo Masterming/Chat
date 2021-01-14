@@ -54,6 +54,7 @@ public class LoginView implements ActionListener {
             String password = new String(passw);
             
             if (ClientController.login(name, password)){
+                System.out.println("success");
                 frame.dispose();
             }
         }

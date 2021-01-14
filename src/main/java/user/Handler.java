@@ -10,13 +10,12 @@ import parser.*;
 public class Handler {
 
     private final Gson parser;
-    private ClientView gui;
-    private LoginView login_gui;
     private boolean logged;
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
     private boolean running;
+    private String name;
 
     private final String ip;
     private final int port;
@@ -28,13 +27,21 @@ public class Handler {
         run();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void run() {
         try {
             connect();
             setup();
-            new Thread(() -> recieve()).start();
+            // new Thread(() -> recieve()).start();
             // new Thread(() -> consoleWrite()).start();
-            
+
         } catch (IOException e) {
             close();
         }
@@ -83,7 +90,7 @@ public class Handler {
         return msg;
     }
 
-    private void write(Message msg) {
+    public void write(Message msg) {
         String json = parser.toJson(msg);
         System.out.println(msg);
         output.print(json);
@@ -105,6 +112,7 @@ public class Handler {
 
     public boolean login(String name, String pw) {
         write(new Message(Type.LOGIN_NAME, name));
+        setName(name);
         write(new Message(Type.LOGIN_PW, pw));
         try {
             Message msg = read();
@@ -114,7 +122,7 @@ public class Handler {
                     logged = true;
                     break;
                 case LOGIN_FAILED:
-                    if(msg.content.equals("3")){
+                    if (msg.content.equals("3")) {
                         close();
                     }
                     logged = false;
