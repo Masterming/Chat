@@ -94,7 +94,7 @@ public class SQLSocket {
             return false;
         }
     }
-
+    
     public boolean ban(String name) {
         try {
             Statement stmt = con.createStatement();
