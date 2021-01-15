@@ -62,4 +62,8 @@ public class ClientController {
     public static void warnUser(String msg){
         gui.popUp(msg);
     }
+
+	public static void logout() {
+        handler.close();
+	}
 }

@@ -99,6 +99,7 @@ public class ClientView implements ActionListener {
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                            ClientController.logout();
                     System.exit(0);
                 }
             }

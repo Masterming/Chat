@@ -110,20 +110,22 @@ public class ClientHandler implements Runnable {
                         write(new Message(MsgCode.GET_ACTIVE, active.toString()));
                         break;
 
+
                     case CHANGE_ROOM:
                         ServerController.changeRoom(msg.content, this);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
+                        LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
                         break;
 
-                    case DISCONNECT:
-                        // Server.
+                    case LOGOUT:
+                        LOGGER.log(Level.INFO, "[System]: " + name + " disconnected\n");
                         close();
                         return;
 
                     default:
                         break;
                 }
-            } catch (IOException e) {
+            } catch (IOException |NullPointerException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
                 close();
             }
@@ -185,9 +187,11 @@ public class ClientHandler implements Runnable {
     public void close() {
         if (running) {
             logged = false;
-            ServerController.updategui();
+            ServerController.leaveRoom(this);
             running = false;
             try {
+                
+            ServerController.updategui();
                 input.close();
                 output.close();
                 socket.close();

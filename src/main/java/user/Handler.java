@@ -86,9 +86,12 @@ public class Handler implements Runnable {
                         break;
                     case BAN:
                         close();
+                        break;
+                    default:
+                        break;
                 }
                 System.out.println(msg.content);
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 close();
             }
         }
@@ -114,6 +117,8 @@ public class Handler implements Runnable {
 
     public void close() {
         // System.out.println("\n The server disconnected...");
+        logged =false;
+        write(new Message(MsgCode.LOGOUT, ""));
         running = false;
         try {
             input.close();

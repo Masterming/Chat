@@ -122,7 +122,7 @@ public class ServerController {
     public static void updategui() {
 
         gui.setRooms(rooms);
-        gui.setUsers(users);
+        gui.setUsers(getUsers());
 
         ArrayList<String> tmpList_r = new ArrayList<>();
         for (Room r : rooms.values()) {
@@ -167,6 +167,7 @@ public class ServerController {
     public static void addroom(Room new_room) {
         if (!rooms.containsValue(new_room)) {
             rooms.put(new_room.getId(), new_room);
+            LOGGER.log(Level.INFO, "[System]: Raum \""+new_room.getName()+ "\" erstellt");
             updategui();
         }
     }
@@ -198,17 +199,17 @@ public class ServerController {
         c.write(new Message(MsgCode.WARNING, msg));
     }
     public static void kickUser(ClientHandler c){
-        rooms.get(c.roomID).removeUser(c);
+        leaveRoom(c);
         c.write(new Message(MsgCode.KICK, ""));
         updategui();
     }
     public static void banUser(ClientHandler c){
-        rooms.get(c.roomID).removeUser(c);
+        leaveRoom(c);
+        sql.ban(c.getname());
         c.write(new Message(MsgCode.BAN, ""));
         updategui();
     }
-
-	public static void logOut(ClientHandler c) {
-        c.close();
-	}
+    public static void leaveRoom(ClientHandler c){
+        rooms.get(c.roomID).removeUser(c);
+    }
 }
