@@ -50,10 +50,10 @@ public class ServerController {
     public void run() {
         try {
             server = new ServerSocket(port, 100);
-            LOGGER.log(Level.INFO, "Server started. Waiting for users...");
+            displayMessage(Level.INFO, "Server started. Waiting for users...");
             new Thread(() -> AcceptUsersAsync()).start();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to start the sever: " + e.getMessage());
+            displayMessage(Level.SEVERE, "Failed to start the sever: " + e.getMessage());
         }
     }
 
@@ -65,14 +65,14 @@ public class ServerController {
 
             while (running) {
                 if (i == 128) {
-                    LOGGER.log(Level.WARNING, "Maximum number of users reached.");
+                    displayMessage(Level.WARNING, "Maximum number of users reached.");
                     break;
                 }
                 i++;
 
                 // Connect with user
                 socket = server.accept();
-                // LOGGER.log(Level.INFO, "Connected to " +
+                // displayMessage(Level.INFO, "Connected to " +
                 // socket.getInetAddress().getHostName() +
                 // "(i=" + i + ")");
 
@@ -110,7 +110,7 @@ public class ServerController {
             running = false;
             try {
                 server.close();
-                LOGGER.log(Level.INFO, "Server closed");
+                displayMessage(Level.INFO, "Server closed");
                 System.exit(0);
             } catch (Exception e) {
                 System.exit(1);
@@ -167,7 +167,7 @@ public class ServerController {
     public static void addroom(Room new_room) {
         if (!rooms.containsValue(new_room)) {
             rooms.put(new_room.getId(), new_room);
-            LOGGER.log(Level.INFO, "[System]: Raum \""+new_room.getName()+ "\" erstellt");
+            displayMessage(Level.INFO, "[System]: Raum \""+new_room.getName()+ "\" erstellt");
             updategui();
         }
     }
@@ -178,6 +178,7 @@ public class ServerController {
                 changeRoom("Eingangshalle Meep", c);
             }
             rooms.remove(room_id);
+            displayMessage(Level.INFO, "[System]: Raum" + room_id + " entfernt");
             updategui();
         }
     }
@@ -186,24 +187,29 @@ public class ServerController {
         if (getRoom(id).isEditable()) {
             getRoom(id).setName(name);
             updategui();
-            LOGGER.log(Level.INFO, "Raum editiert");
+            displayMessage(Level.INFO, "[System]: Raum "+ id+ " umbenannt zu: "+ name);
         } else {
-            LOGGER.log(Level.WARNING, "Raum nicht editierbar");
+            displayMessage(Level.WARNING, "[System]: Raum nicht editierbar");
         }
     }
 
-    public static void displayMessage(String msg) {
+    public static void displayMessage(Level lvl, String msg) {
+        LOGGER.log(lvl, msg );
         gui.addMessage(msg);
     }
     public static void warnUser(String msg, ClientHandler c){
+        displayMessage(Level.WARNING, "[System]: Benutzerverwarnung an "+c.getname()+": \""+ msg+"\"");
         c.write(new Message(MsgCode.WARNING, msg));
     }
     public static void kickUser(ClientHandler c){
+        displayMessage(Level.WARNING, "[System]: Benutzerkick für: "+ c.getname());
+
         leaveRoom(c);
         c.write(new Message(MsgCode.KICK, ""));
         updategui();
     }
     public static void banUser(ClientHandler c){
+        displayMessage(Level.WARNING, "[System]: Benutzerbann für: "+ c.getname());
         leaveRoom(c);
         sql.ban(c.getname());
         c.write(new Message(MsgCode.BAN, ""));

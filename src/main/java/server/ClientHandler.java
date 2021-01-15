@@ -84,15 +84,14 @@ public class ClientHandler implements Runnable {
                             ServerController.getRoom(roomID).addUser(this);
                             ServerController.updategui();
                             sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-                            LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
+                            ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected\n");
                         }
                         break;
 
                     case MESSAGE: // Send message in room
                         if (!logged)
                             break;
-                        LOGGER.log(Level.INFO, "User " + id + ": " + msg.content);
-                        ServerController.displayMessage("[" + name + "]: " + msg.content);
+                        ServerController.displayMessage(Level.INFO, "[" + name + "]: " + msg.content);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[" + name + "]: " + msg.content));
                         break;
 
@@ -113,11 +112,11 @@ public class ClientHandler implements Runnable {
                     case CHANGE_ROOM:
                         ServerController.changeRoom(msg.content, this);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-                        LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
+                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected to "+msg.content+"\n");
                         break;
 
                     case LOGOUT:
-                        LOGGER.log(Level.INFO, "[System]: " + name + " disconnected\n");
+                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " disconnected\n");
                         close();
                         return;
 
@@ -125,7 +124,7 @@ public class ClientHandler implements Runnable {
                         break;
                 }
             } catch (IOException |NullPointerException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
+                ServerController.displayMessage(Level.SEVERE, e.getMessage());
                 close();
             }
         }
@@ -195,9 +194,9 @@ public class ClientHandler implements Runnable {
                 output.close();
                 socket.close();
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
+                ServerController.displayMessage(Level.SEVERE, e.getMessage());
             }
-            LOGGER.log(Level.INFO, "Connection closed");
+            ServerController.displayMessage(Level.INFO, "Connection closed");
         }
     }
 

@@ -91,7 +91,7 @@ public class Handler implements Runnable {
                     default:
                         break;
                 }
-                System.out.println(msg.content);
+                //System.out.println(msg.content);
             } catch (IOException | NullPointerException e) {
                 close();
             }
