@@ -60,6 +60,9 @@ public class LoginView implements ActionListener {
                 System.out.println("success");
                 frame.dispose();
             }
+            else{
+                JOptionPane.showMessageDialog(frame, "wrong password", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 }
