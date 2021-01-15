@@ -198,10 +198,12 @@ public class ServerController {
         c.write(new Message(MsgCode.WARNING, msg));
     }
     public static void kickUser(ClientHandler c){
+        rooms.get(c.roomID).removeUser(c);
         c.write(new Message(MsgCode.KICK, ""));
         updategui();
     }
     public static void banUser(ClientHandler c){
+        rooms.get(c.roomID).removeUser(c);
         c.write(new Message(MsgCode.BAN, ""));
         updategui();
     }

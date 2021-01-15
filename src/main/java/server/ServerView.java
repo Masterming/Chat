@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -203,11 +205,17 @@ public class ServerView implements ActionListener, ListSelectionListener {
         // hübsch aussehen
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter(){
+            if(JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION){
+                System.exit(0);
+            }
+        }
         frame.setTitle("Server");
         frame.pack();
         frame.setVisible(true);
         frame.setMinimumSize(new Dimension(800, 350));
+        
     }
 
     public void addMessage(String m) {
@@ -328,21 +336,20 @@ public class ServerView implements ActionListener, ListSelectionListener {
             if (users.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Nutzer aus!");
             } else {
-                int user = users.getSelectedIndex();
+                ClientHandler user = users.getSelectedValue();
                 kickUser.setVisible(false);
 
-                // TODO: Nutzer kicken
+                ServerController.kickUser(user);
 
             }
         } else if (e.getSource() == banButton) {
             if (users.getSelectedIndex() == -1) {
                 addMessage("Wähle einen Nutzer aus!");
             } else {
-                int user = users.getSelectedIndex();
+                ClientHandler user = users.getSelectedValue();
                 banUser.setVisible(false);
 
-                // TODO: Nutzer bannen
-
+                ServerController.banUser(user);
             }
         }
     }
@@ -361,4 +368,5 @@ public class ServerView implements ActionListener, ListSelectionListener {
 
         }
     }
+    
 }

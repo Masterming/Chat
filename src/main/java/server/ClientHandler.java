@@ -76,12 +76,12 @@ public class ClientHandler implements Runnable {
                     case LOGIN_NAME: // Set user
                         String username = msg.content;
                         username = username.toLowerCase();
-                        name = username.replaceAll("[^(a-z)]", "");
+                        name = username.replaceAll("[^(a-z 0-9)]", "");
                         break;
 
                     case LOGIN_PW: // Try to login active user
                         String password = msg.content;
-                        password = password.replaceAll("[^(A-z)]", "");
+                        password = password.replaceAll("[^(A-z 0-9)]", "");
                         if (login(password)) {
                             logged = true;
                             ServerController.getRoom(roomID).addUser(this);
@@ -186,6 +186,8 @@ public class ClientHandler implements Runnable {
 
     public void close() {
         if (running) {
+            logged = false;
+            ServerController.updategui();
             running = false;
             try {
                 input.close();
