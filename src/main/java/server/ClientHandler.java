@@ -113,11 +113,11 @@ public class ClientHandler implements Runnable {
                     case CHANGE_ROOM:
                         ServerController.changeRoom(msg.content, this);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-                        LOGGER.log(Level.INFO, "[System]: " + name + " connected\n");
+                        LOGGER.log(Level.INFO, "[System]: " + name + " connected");
                         break;
 
                     case LOGOUT:
-                        LOGGER.log(Level.INFO, "[System]: " + name + " disconnected\n");
+                        LOGGER.log(Level.INFO, "[System]: " + name + " disconnected");
                         close();
                         return;
 
