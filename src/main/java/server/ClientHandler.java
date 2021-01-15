@@ -46,9 +46,8 @@ public class ClientHandler implements Runnable {
 
     public void write(Message msg) {
         String json = parser.toJson(msg);
-        System.out.println(json);
-
-        //System.out.println(msg);
+        // System.out.println(json);
+        System.out.println(msg);
 
         output.println(json);
         output.flush();
@@ -56,9 +55,9 @@ public class ClientHandler implements Runnable {
 
     private Message read() throws IOException {
         String json = input.readLine();
-        System.out.println(json);
+        // System.out.println(json);
         Message msg = parser.fromJson(json, Message.class);
-        //System.out.println(msg);
+        System.out.println(msg);
 
         return msg;
     }
@@ -206,16 +205,17 @@ public class ClientHandler implements Runnable {
         return ("[" + ServerController.getRoom(roomID).getName() + "] " + name);
     }
 
-	public String getname() {
-		return name;
-	}
+    public String getname() {
+        return name;
+    }
 
-	public void updateR(ArrayList<String>rooms) {
+    public void updateR(ArrayList<String> rooms) {
         String tmp_r = parser.toJson(rooms);
         write(new Message(MsgCode.UPDATE_ROOMS, tmp_r));
     }
+
     public void updateU(ArrayList<String> users) {
         String tmp_u = parser.toJson(users);
         write(new Message(MsgCode.UPDATE_USERS, tmp_u));
-	}
+    }
 }
