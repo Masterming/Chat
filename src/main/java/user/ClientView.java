@@ -169,11 +169,4 @@ public class ClientView implements ActionListener {
     public void popUp(String msg) {
         JOptionPane.showMessageDialog(null, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
     }
-
-    public void windowClosing(WindowEvent close) {
-        if (JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
-    }
 }

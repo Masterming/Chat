@@ -208,6 +208,7 @@ public class ServerController {
         updategui();
     }
 
-	public static void logOut() {
+	public static void logOut(ClientHandler c) {
+        c.close();
 	}
 }
