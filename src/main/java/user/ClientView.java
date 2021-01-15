@@ -2,18 +2,12 @@ package user;
 
 import javax.swing.*;
 
-import server.ServerController;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ClientView implements ActionListener {
-
-    private final static Logger LOGGER = Logger.getLogger(ClientView.class.getName());
 
     private JFrame frame;
     private JPanel panel;
@@ -103,10 +97,9 @@ public class ClientView implements ActionListener {
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to close this window?", "Close Window?",
+                if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     System.exit(0);
-                    ServerController.logOut();
                 }
             }
         });
@@ -168,12 +161,5 @@ public class ClientView implements ActionListener {
 
     public void popUp(String msg) {
         JOptionPane.showMessageDialog(null, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
-    }
-
-    public void windowClosing(WindowEvent close) {
-        if (JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
     }
 }
