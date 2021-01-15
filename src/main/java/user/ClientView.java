@@ -1,6 +1,9 @@
 package user;
 
 import javax.swing.*;
+
+import server.ServerController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +33,6 @@ public class ClientView implements ActionListener {
     private JList<String> rooms;
     private JButton join;
     private JPanel roomWbutton;
-    private JOptionPane warning;
 
     public ClientView() {
 
@@ -97,7 +99,17 @@ public class ClientView implements ActionListener {
         // hübsch aussehen
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to close this window?", "Close Window?",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                    ServerController.logOut();
+                }
+            }
+        });
         frame.setTitle("User");
         frame.pack();
         frame.setVisible(true);
@@ -105,7 +117,7 @@ public class ClientView implements ActionListener {
 
     // Nachricht ins Chatfenster schreiben
     public void addMessage(String m) {
-        chat.append( m+"\n");
+        chat.append(m + "\n");
     }
 
     // Raumliste aktualisieren
@@ -136,8 +148,8 @@ public class ClientView implements ActionListener {
                 String message = text.getText();
                 text.setText("");
                 ClientController.send(message);
-                addMessage("[" + ClientController.getClientname() + "]: " +message);
-                
+                addMessage("[" + ClientController.getClientname() + "]: " + message);
+
                 break;
 
             case "Beitreten":
@@ -153,11 +165,14 @@ public class ClientView implements ActionListener {
                 break;
         }
     }
-    public void popUp(String msg){
+
+    public void popUp(String msg) {
         JOptionPane.showMessageDialog(null, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
     }
-    public void windowClosing(WindowEvent close){
-        if(JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION){
+
+    public void windowClosing(WindowEvent close) {
+        if (JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
