@@ -13,8 +13,6 @@ import parser.*;
  */
 public class ClientHandler implements Runnable {
 
-    private final static Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
-
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
@@ -112,19 +110,11 @@ public class ClientHandler implements Runnable {
                     case CHANGE_ROOM:
                         ServerController.changeRoom(msg.content, this);
                         sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-<<<<<<< HEAD
-                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected to "+msg.content+"\n");
+                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected to "+msg.content);
                         break;
 
                     case LOGOUT:
                         ServerController.displayMessage(Level.INFO, "[System]: " + name + " disconnected\n");
-=======
-                        LOGGER.log(Level.INFO, "[System]: " + name + " connected");
-                        break;
-
-                    case LOGOUT:
-                        LOGGER.log(Level.INFO, "[System]: " + name + " disconnected");
->>>>>>> 2ecc673d8fe04b044336a7dea328ade1c2ea2dcf
                         close();
                         return;
 
@@ -154,6 +144,8 @@ public class ClientHandler implements Runnable {
             case 3: // registered
                 write(new Message(MsgCode.LOGIN_SUCCESS, "1"));
                 return true;
+            case 4:
+                write(new Message(MsgCode.LOGIN_FAILED, "4"));
             default:
                 write(new Message(MsgCode.LOGIN_FAILED, "ERROR"));
                 return false;
@@ -164,6 +156,10 @@ public class ClientHandler implements Runnable {
         boolean name_found = false;
 
         // check if username exists
+        for (ClientHandler c : ServerController.getUsers()) {
+            if(username.equals(c.name))
+            return 4;            
+        }
         for (String un : ServerController.getSql().getAllUser()) {
             if (username.equals(un)) {
                 name_found = true;

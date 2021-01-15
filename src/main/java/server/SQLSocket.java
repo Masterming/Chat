@@ -8,8 +8,6 @@ import java.util.logging.*;
  * @author blechner
  */
 public class SQLSocket {
-
-    private final static Logger LOGGER = Logger.getLogger(SQLSocket.class.getName());
     private Connection con;
 
     public SQLSocket() {

@@ -13,7 +13,6 @@ public class ClientController {
     private static ClientView gui;
     private static LoginView login_gui;
     private static boolean logged;
-    private static boolean running;
     private static Handler handler;
 
     public ClientController(String ip, int port) {
@@ -32,6 +31,7 @@ public class ClientController {
             t.start();
             
         }
+    
         return logged;
 
     }
@@ -65,5 +65,10 @@ public class ClientController {
 
 	public static void logout() {
         handler.close();
+    }
+
+	public static void displayLoginMessage(String content) {
+        login_gui.loginFailedMsg(content);
 	}
+
 }

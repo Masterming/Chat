@@ -26,7 +26,6 @@ public class ServerView implements ActionListener, ListSelectionListener {
     private JTabbedPane statusAuswahl;
     private JList<ClientHandler> users;
     private JList<Room> rooms;
-    private JTextField text;
     private JButton ok;
     private JComboBox<String> wahl;
     private JPanel aufgabeAuswahl;
@@ -73,7 +72,6 @@ public class ServerView implements ActionListener, ListSelectionListener {
         statusAuswahl = new JTabbedPane();
         rooms = new JList<>();
         users = new JList<>();
-        text = new JTextField();
         ok = new JButton("OK");
         aufgabeAuswahl = new JPanel(new BorderLayout());
         newRoom = new JPanel(new GridLayout(2, 2));
@@ -358,17 +356,5 @@ public class ServerView implements ActionListener, ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getSource() == users) {
-            int user = users.getSelectedIndex();
-
-            // TODO: Nutzerinformationen setzten (setInformationUser())
-
-        } else if (e.getSource() == rooms) {
-            int room = rooms.getSelectedIndex();
-
-            // TODO: Rauminformationen setzten (setInformationRoom())
-
-        }
     }
-
 }

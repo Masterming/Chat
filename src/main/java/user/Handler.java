@@ -141,6 +141,8 @@ public class Handler implements Runnable {
                     logged = true;
                     break;
                 case LOGIN_FAILED:
+                ClientController.displayLoginMessage(msg.content);
+
                     if (msg.content.equals("2")) {
                         close();
                     }

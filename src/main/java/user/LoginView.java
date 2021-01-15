@@ -2,8 +2,6 @@ package user;
 
 import javax.swing.*;
 
-
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +41,7 @@ public class LoginView implements ActionListener {
         frame.pack();
         frame.setSize(300, 150);
         frame.setResizable(false);
-        
+
         frame.setVisible(true);
 
     }
@@ -55,14 +53,28 @@ public class LoginView implements ActionListener {
             String name = nameText.getText();
             char[] passw = passwortText.getPassword();
             String password = new String(passw);
-            
-            if (ClientController.login(name, password)){
-                //System.out.println("success");
+
+            if (ClientController.login(name, password)) {
+                // System.out.println("success");
                 frame.dispose();
             }
-            else{
-                JOptionPane.showMessageDialog(frame, "wrong password", "Error", JOptionPane.INFORMATION_MESSAGE);
-            }
+
+        }
+    }
+
+    public void loginFailedMsg(String errorcode) {
+
+        switch (errorcode) {
+            case "2":
+                JOptionPane.showMessageDialog(frame, "you are banned!", "Banned!", JOptionPane.WARNING_MESSAGE);
+                break;
+            case "3":
+                JOptionPane.showMessageDialog(frame, "wrong password", "wrong password", JOptionPane.WARNING_MESSAGE);
+                break;
+            case "4":
+                JOptionPane.showMessageDialog(frame, "user is already logged in", "already logged in", JOptionPane.WARNING_MESSAGE);
+                break;
+
         }
     }
 }
