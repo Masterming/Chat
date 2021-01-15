@@ -206,20 +206,24 @@ public class ServerView implements ActionListener, ListSelectionListener {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter(){
-            if(JOptionPane.showConfirmDialog(frame, "u serious?!", "???", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION){
-                System.exit(0);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to close this window?", "Close Window?",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
             }
-        }
+        });
         frame.setTitle("Server");
         frame.pack();
         frame.setVisible(true);
         frame.setMinimumSize(new Dimension(800, 350));
-        
+
     }
 
     public void addMessage(String m) {
-        chat.append(m +"\n");
+        chat.append(m + "\n");
     }
 
     public void setRooms(Map<Integer, Room> r) {
@@ -368,5 +372,5 @@ public class ServerView implements ActionListener, ListSelectionListener {
 
         }
     }
-    
+
 }

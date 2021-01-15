@@ -207,4 +207,7 @@ public class ServerController {
         c.write(new Message(MsgCode.BAN, ""));
         updategui();
     }
+
+	public static void logOut() {
+	}
 }
