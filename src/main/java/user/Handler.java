@@ -79,6 +79,14 @@ public class Handler implements Runnable {
                         ArrayList<String> tmp_u = parser.fromJson(msg.content, type);
                         ClientController.updateUsers(tmp_u);
                         break;
+                    case WARNING:
+                        ClientController.warnUser(msg.content);
+                        break;
+                    case KICK:
+                        close();
+                        break;
+                    case BAN:
+                        close();
                 }
                 System.out.println(msg.content);
             } catch (IOException e) {

@@ -41,6 +41,9 @@ public class LoginView implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Login");
         frame.pack();
+        frame.setSize(300, 150);
+        frame.setResizable(false);
+        
         frame.setVisible(true);
 
     }

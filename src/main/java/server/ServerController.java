@@ -35,7 +35,7 @@ public class ServerController {
         // Make an ArrayList to hold all user objects
         users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
-        rooms.put(0, new Room("Eingangshalle", false));
+        rooms.put(0, new Room("Eingangshalle Meep", false));
         gui = new ServerView();
         updategui();
 
@@ -174,7 +174,7 @@ public class ServerController {
     public static void deleteRoom(int room_id) {
         if (rooms.get(room_id).isEditable()) { 
             for (ClientHandler c : rooms.get(room_id).getUsers()) {
-                changeRoom("Eingangshalle", c);
+                changeRoom("Eingangshalle Meep", c);
             }
             rooms.remove(room_id);
             updategui();
@@ -193,5 +193,16 @@ public class ServerController {
 
     public static void displayMessage(String msg) {
         gui.addMessage(msg);
+    }
+    public static void warnUser(String msg, ClientHandler c){
+        c.write(new Message(MsgCode.WARNING, msg));
+    }
+    public static void kickUser(ClientHandler c){
+        c.write(new Message(MsgCode.KICK, ""));
+        updategui();
+    }
+    public static void banUser(ClientHandler c){
+        c.write(new Message(MsgCode.BAN, ""));
+        updategui();
     }
 }

@@ -317,10 +317,10 @@ public class ServerView implements ActionListener, ListSelectionListener {
                     addMessage("Füge eine Nachricht hinzu!");
                 } else {
                     String message = warnMessage.getText();
-                    int user = users.getSelectedIndex();
+                    ClientHandler user = users.getSelectedValue();
                     warnUser.setVisible(false);
 
-                    // TODO: Nutzer warnen
+                    ServerController.warnUser(message, user);
 
                 }
             }

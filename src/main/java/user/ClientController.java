@@ -58,7 +58,11 @@ public class ClientController {
     }
 
 	public static void changeRoom(String room) {
+        gui.addMessage("[System]: "+ room +" beigetreten");
         handler.write(new Message(MsgCode.CHANGE_ROOM, room));
-        
-	}
+
+    }
+    public static void warnUser(String msg){
+        gui.popUp(msg);
+    }
 }

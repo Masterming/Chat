@@ -30,6 +30,7 @@ public class ClientView implements ActionListener {
     private JList<String> rooms;
     private JButton join;
     private JPanel roomWbutton;
+    private JOptionPane warning;
 
     public ClientView() {
 
@@ -151,6 +152,9 @@ public class ClientView implements ActionListener {
             default:
                 break;
         }
+    }
+    public void popUp(String msg){
+        JOptionPane.showMessageDialog(null, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
     }
 
 }

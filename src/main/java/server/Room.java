@@ -34,7 +34,7 @@ public class Room {
 
     public void setName(String name) {
 
-        name = name.replaceAll("[^(A-z)]", "");
+        name = name.replaceAll("[^(A-z )]", "");
         this.name = name;
     }
 
