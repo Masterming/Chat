@@ -94,4 +94,15 @@ public class SQLSocket {
             return false;
         }
     }
+
+    public boolean ban(String name) {
+        try {
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("UPDATE `register` SET \"banned=1\" WHERE Name=\"" + name + "\"");
+            return true;
+        } catch (SQLException e) {
+            // System.out.println(e.getMessage());
+            return false;
+        }
+    }
 }
