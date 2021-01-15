@@ -2,11 +2,12 @@ package server;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Room {
 
     private int id;
-    private ArrayList<ClientHandler> users;
+    private CopyOnWriteArrayList<ClientHandler> users;
     private String name;
     private boolean editable;
     private static int id_count = 0;
@@ -14,7 +15,7 @@ public class Room {
     public Room(String name, boolean editable) {
         this.id = id_count;
         this.setName(name);
-        users = new ArrayList<>();
+        users = new CopyOnWriteArrayList<>();
         this.editable = editable;
         id_count++;
     }
@@ -41,7 +42,7 @@ public class Room {
         return users.size();
     }
 
-    public ArrayList<ClientHandler> getUsers() {
+    public CopyOnWriteArrayList<ClientHandler> getUsers() {
         return users;
     }
 

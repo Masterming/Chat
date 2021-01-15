@@ -146,7 +146,9 @@ public class ServerController {
         
         for (Room r : rooms.values()) {
             if(r_name.equals(r.getName())){
+                System.out.println(user.roomID);
                 user.roomID = r.getId();
+                System.out.println(user.roomID);
             }
         }
        
@@ -170,7 +172,7 @@ public class ServerController {
     }
 
     public static void deleteRoom(int room_id) {
-        if (rooms.get(room_id).isEditable()) {
+        if (rooms.get(room_id).isEditable()) { 
             for (ClientHandler c : rooms.get(room_id).getUsers()) {
                 changeRoom("Eingangshalle", c);
             }
