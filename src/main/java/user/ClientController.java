@@ -16,10 +16,8 @@ public class ClientController {
     private static Handler handler;
 
     public ClientController(String ip, int port) {
-
         handler = new Handler(ip, port);
         login_gui = new LoginView();
-         
     }
 
     public static boolean login(String name, String pw) {
@@ -29,46 +27,50 @@ public class ClientController {
             gui = new ClientView();
             Thread t = new Thread(handler);
             t.start();
-            
+
         }
-    
+
         return logged;
 
     }
 
-    public static String getClientname(){
+    public static String getName() {
         return handler.getName();
     }
-	public static void send(String message) {
+
+    public static void send(String message) {
         Message msg = new Message(MsgCode.MESSAGE, message);
         handler.write(msg);
-	}
+    }
 
-	public static void displayMessage(String m) {
+    public static void displayMessage(String m) {
         gui.addMessage(m);
-	}
-    public static void updateRooms(ArrayList<String> tmp){
+    }
+
+    public static void updateRooms(ArrayList<String> tmp) {
         gui.setRooms(tmp);
     }
-    public static void updateUsers(ArrayList<String> tmp){
+
+    public static void updateUsers(ArrayList<String> tmp) {
         gui.setUsers(tmp);
     }
 
-	public static void changeRoom(String room) {
-        gui.addMessage("[System]: "+ room +" beigetreten");
+    public static void changeRoom(String room) {
+        gui.addMessage("[System]: " + room + " beigetreten");
         handler.write(new Message(MsgCode.CHANGE_ROOM, room));
 
     }
-    public static void warnUser(String msg){
+
+    public static void warnUser(String msg) {
         gui.popUp(msg);
     }
 
-	public static void logout() {
+    public static void logout() {
         handler.close();
     }
 
-	public static void displayLoginMessage(String content) {
+    public static void displayLoginMessage(String content) {
         login_gui.loginFailedMsg(content);
-	}
+    }
 
 }

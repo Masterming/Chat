@@ -19,9 +19,8 @@ public class SQLSocket {
         }
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB", "root", "");
-            // System.out.println("connected to sqlsocket");
         } catch (SQLException e) {
-            ServerController.displayMessage(Level.SEVERE, "connection to sqlsocket failed:" + e.getMessage());
+            ServerController.displayMessage(Level.SEVERE, "connection to sql-socket failed:" + e.getMessage());
         }
     }
 
@@ -65,14 +64,14 @@ public class SQLSocket {
             }
             if (banned_rs == 1) {
                 ServerController.displayMessage(Level.INFO, "User is Banned");
-                return 1; // 1: user banned
+                return 1; // user banned
             }
             if (pw_rs == null) {
-                return -1;// -1: error
+                return -1;// error
             } else if (!pw_rs.equals(pw)) {
-                return 2;// 2: pw falsch
+                return 2;// pw wrong
             } else {
-                return 0;// : passt alles
+                return 0;// no problems
             }
 
         } catch (SQLException e) {

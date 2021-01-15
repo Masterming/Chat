@@ -21,18 +21,18 @@ public class ServerView implements ActionListener, ListSelectionListener {
     private JLabel info2;
     private JLabel info3;
     private JLabel info4;
-    private JPanel aufgabe;
+    private JPanel task;
     private TextArea chat;
-    private JTabbedPane statusAuswahl;
+    private JTabbedPane statusSelection;
     private JList<ClientHandler> users;
     private JList<Room> rooms;
     private JButton ok;
-    private JComboBox<String> wahl;
-    private JPanel aufgabeAuswahl;
+    private JComboBox<String> choice;
+    private JPanel taskSelection;
     private JPanel newRoom;
     private JLabel rName;
     private JTextField roomName;
-    private JCheckBox editierbar;
+    private JCheckBox editable;
     private JButton okNewRoom;
     private JPanel deleteRoom;
     private JLabel deleteRLabel;
@@ -53,7 +53,7 @@ public class ServerView implements ActionListener, ListSelectionListener {
     private JPanel banUser;
     private JLabel banLabel;
     private JButton banButton;
-    private JPanel aufgabeSouth;
+    private JPanel taskSouth;
 
     public ServerView() {
 
@@ -67,17 +67,17 @@ public class ServerView implements ActionListener, ListSelectionListener {
         info2 = new JLabel();
         info3 = new JLabel();
         info4 = new JLabel();
-        aufgabe = new JPanel(new BorderLayout());
+        task = new JPanel(new BorderLayout());
         chat = new TextArea();
-        statusAuswahl = new JTabbedPane();
+        statusSelection = new JTabbedPane();
         rooms = new JList<>();
         users = new JList<>();
         ok = new JButton("OK");
-        aufgabeAuswahl = new JPanel(new BorderLayout());
+        taskSelection = new JPanel(new BorderLayout());
         newRoom = new JPanel(new GridLayout(2, 2));
         rName = new JLabel("Raumname:");
         roomName = new JTextField();
-        editierbar = new JCheckBox("Editierbar");
+        editable = new JCheckBox("Editierbar");
         okNewRoom = new JButton("Raum erstellen");
         deleteRoom = new JPanel(new GridLayout(0, 1));
         deleteRLabel = new JLabel("Wähle den Raum aus der Liste aus.");
@@ -98,7 +98,7 @@ public class ServerView implements ActionListener, ListSelectionListener {
         banUser = new JPanel(new GridLayout(0, 1));
         banLabel = new JLabel("Wähle einen Nutzer aus der Liste aus.");
         banButton = new JButton("Bannen");
-        aufgabeSouth = new JPanel(new FlowLayout());
+        taskSouth = new JPanel(new FlowLayout());
 
         // Chatfenster
         chat.setEditable(false);
@@ -111,11 +111,11 @@ public class ServerView implements ActionListener, ListSelectionListener {
         rooms.addListSelectionListener(this);
         JScrollPane scrollu = new JScrollPane(users);
         JScrollPane scrollr = new JScrollPane(rooms);
-        statusAuswahl.setForeground(Color.BLACK);
-        statusAuswahl.addTab("Benutzer", scrollu);
-        statusAuswahl.addTab("Räume", scrollr);
+        statusSelection.setForeground(Color.BLACK);
+        statusSelection.addTab("Benutzer", scrollu);
+        statusSelection.addTab("Räume", scrollr);
         status.setLayout(new BorderLayout());
-        status.add(statusAuswahl, BorderLayout.CENTER);
+        status.add(statusSelection, BorderLayout.CENTER);
 
         // Informationen
         information.add(info1);
@@ -126,24 +126,24 @@ public class ServerView implements ActionListener, ListSelectionListener {
         // Aufgaben
         String auswahlListe[] = { "Raum erstellen", "Raum löschen", "Raum bearbeiten", "Benutzer verwarnen",
                 "Benutzer kicken", "Benutzer bannen" };
-        wahl = new JComboBox<>(auswahlListe);
+        choice = new JComboBox<>(auswahlListe);
         ok.addActionListener(this);
-        aufgabeAuswahl.add(wahl, BorderLayout.CENTER);
-        aufgabeAuswahl.add(ok, BorderLayout.EAST);
-        aufgabe.add(aufgabeAuswahl, BorderLayout.CENTER);
-        aufgabe.add(aufgabeSouth, BorderLayout.SOUTH);
-        aufgabeSouth.add(newRoom);
-        aufgabeSouth.add(deleteRoom);
-        aufgabeSouth.add(editRoom);
-        aufgabeSouth.add(warnUser);
-        aufgabeSouth.add(kickUser);
-        aufgabeSouth.add(banUser);
+        taskSelection.add(choice, BorderLayout.CENTER);
+        taskSelection.add(ok, BorderLayout.EAST);
+        task.add(taskSelection, BorderLayout.CENTER);
+        task.add(taskSouth, BorderLayout.SOUTH);
+        taskSouth.add(newRoom);
+        taskSouth.add(deleteRoom);
+        taskSouth.add(editRoom);
+        taskSouth.add(warnUser);
+        taskSouth.add(kickUser);
+        taskSouth.add(banUser);
 
         // Raum erstellen
         okNewRoom.addActionListener(this);
         newRoom.add(rName);
         newRoom.add(roomName);
-        newRoom.add(editierbar);
+        newRoom.add(editable);
         newRoom.add(okNewRoom);
         newRoom.setVisible(false);
 
@@ -189,12 +189,12 @@ public class ServerView implements ActionListener, ListSelectionListener {
         chatPanel.setBorder(BorderFactory.createTitledBorder("Chat"));
         status.setBorder(BorderFactory.createTitledBorder("Status"));
         information.setBorder(BorderFactory.createTitledBorder("Information"));
-        aufgabe.setBorder(BorderFactory.createTitledBorder("Aufgaben"));
+        task.setBorder(BorderFactory.createTitledBorder("Aufgaben"));
 
         // Panel anordnen
         controlPanel.add(status, BorderLayout.CENTER);
         controlPanel.add(information, BorderLayout.NORTH);
-        controlPanel.add(aufgabe, BorderLayout.SOUTH);
+        controlPanel.add(task, BorderLayout.SOUTH);
         panel.add(chatPanel, BorderLayout.CENTER);
         panel.add(controlPanel, BorderLayout.EAST);
 
@@ -205,8 +205,8 @@ public class ServerView implements ActionListener, ListSelectionListener {
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     System.exit(0);
                 }
             }
@@ -234,7 +234,7 @@ public class ServerView implements ActionListener, ListSelectionListener {
     public void setInformationRoom(Room room) {
         info1.setText("ID: " + room.getId());
         info2.setText("Name: " + room.getName());
-        info3.setText("Mitglieder: " + room.getUsercount());
+        info3.setText("Mitglieder: " + room.size());
         info4.setText("Editierbar: " + room.isEditable());
     }
 
@@ -254,29 +254,29 @@ public class ServerView implements ActionListener, ListSelectionListener {
             warnUser.setVisible(false);
             kickUser.setVisible(false);
             banUser.setVisible(false);
-            switch (wahl.getSelectedIndex()) {
+            switch (choice.getSelectedIndex()) {
                 case 0:
                     newRoom.setVisible(true);
                     break;
                 case 1:
                     deleteRoom.setVisible(true);
-                    statusAuswahl.setSelectedIndex(1);
+                    statusSelection.setSelectedIndex(1);
                     break;
                 case 2:
                     editRoom.setVisible(true);
-                    statusAuswahl.setSelectedIndex(1);
+                    statusSelection.setSelectedIndex(1);
                     break;
                 case 3:
                     warnUser.setVisible(true);
-                    statusAuswahl.setSelectedIndex(0);
+                    statusSelection.setSelectedIndex(0);
                     break;
                 case 4:
                     kickUser.setVisible(true);
-                    statusAuswahl.setSelectedIndex(0);
+                    statusSelection.setSelectedIndex(0);
                     break;
                 case 5:
                     banUser.setVisible(true);
-                    statusAuswahl.setSelectedIndex(0);
+                    statusSelection.setSelectedIndex(0);
                     break;
                 default:
                     break;
@@ -286,11 +286,11 @@ public class ServerView implements ActionListener, ListSelectionListener {
             if (roomName.getText().equals("")) {
                 addMessage("Raumname eintragen!");
             } else {
-                String roomname = roomName.getText();
-                Boolean edit = editierbar.isSelected();
+                String name = roomName.getText();
+                Boolean edit = editable.isSelected();
                 newRoom.setVisible(false);
 
-                ServerController.addroom(new Room(roomname, edit));
+                ServerController.addroom(new Room(name, edit));
 
             }
         } else if (e.getSource() == deleteRButton) {

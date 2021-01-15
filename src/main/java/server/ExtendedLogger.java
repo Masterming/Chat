@@ -19,7 +19,7 @@ public class ExtendedLogger {
         logger.addHandler(fileHTML);
     }
 
-    // change loggin level for all logger
+    // change logging level for all logger
     static public void setDebugLevel(Level newLvl) {
         Logger logger = LogManager.getLogManager().getLogger("");
         logger.setLevel(newLvl);

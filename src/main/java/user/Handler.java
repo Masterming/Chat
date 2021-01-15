@@ -50,10 +50,10 @@ public class Handler implements Runnable {
     }
 
     public void run() {
-        recieve();
+        receive();
     }
 
-    private void recieve() {
+    private void receive() {
         running = true;
 
         while (running) {
@@ -91,7 +91,7 @@ public class Handler implements Runnable {
                     default:
                         break;
                 }
-                //System.out.println(msg.content);
+                // System.out.println(msg.content);
             } catch (IOException | NullPointerException e) {
                 close();
             }
@@ -109,14 +109,14 @@ public class Handler implements Runnable {
     public void write(Message msg) {
         String json = parser.toJson(msg);
         System.out.println(msg);
-        //System.out.println(json);
+        // System.out.println(json);
         output.println(json);
         output.flush();
     }
 
     public void close() {
         // System.out.println("\n The server disconnected...");
-        logged =false;
+        logged = false;
         write(new Message(MsgCode.LOGOUT, ""));
         running = false;
         try {
@@ -137,11 +137,11 @@ public class Handler implements Runnable {
             Message msg = read();
 
             switch (msg.type) {
-                case LOGIN_SUCCESS: // weird stuff happened
+                case LOGIN_SUCCESS:
                     logged = true;
                     break;
                 case LOGIN_FAILED:
-                ClientController.displayLoginMessage(msg.content);
+                    ClientController.displayLoginMessage(msg.content);
 
                     if (msg.content.equals("2")) {
                         close();

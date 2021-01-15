@@ -72,7 +72,8 @@ public class LoginView implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "wrong password", "wrong password", JOptionPane.WARNING_MESSAGE);
                 break;
             case "4":
-                JOptionPane.showMessageDialog(frame, "user is already logged in", "already logged in", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "user is already logged in", "already logged in",
+                        JOptionPane.WARNING_MESSAGE);
                 break;
 
         }

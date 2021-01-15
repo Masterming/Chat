@@ -22,11 +22,11 @@ public class ClientView implements ActionListener {
     private JPanel message;
     private JTextField text;
     private JButton send;
-    private JTabbedPane statusAuswahl;
+    private JTabbedPane statusSelection;
     private JList<String> users;
     private JList<String> rooms;
     private JButton join;
-    private JPanel roomWbutton;
+    private JPanel roomButton;
 
     public ClientView() {
 
@@ -43,11 +43,11 @@ public class ClientView implements ActionListener {
         text = new JTextField();
         send = new JButton("Senden");
         message = new JPanel();
-        statusAuswahl = new JTabbedPane();
+        statusSelection = new JTabbedPane();
         rooms = new JList<>();
         users = new JList<>();
         join = new JButton("Beitreten");
-        roomWbutton = new JPanel(new BorderLayout());
+        roomButton = new JPanel(new BorderLayout());
 
         // Chatfenster
         chat.setEditable(false);
@@ -61,15 +61,15 @@ public class ClientView implements ActionListener {
         // Status
         users.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         rooms.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollu = new JScrollPane(users);
-        JScrollPane scrollr = new JScrollPane(rooms);
-        roomWbutton.add(scrollr, BorderLayout.CENTER);
-        roomWbutton.add(join, BorderLayout.SOUTH);
-        statusAuswahl.setForeground(Color.BLACK);
-        statusAuswahl.addTab("Benutzer", scrollu);
-        statusAuswahl.addTab("Räume", roomWbutton);
+        JScrollPane scrollUser = new JScrollPane(users);
+        JScrollPane scrollRoom = new JScrollPane(rooms);
+        roomButton.add(scrollRoom, BorderLayout.CENTER);
+        roomButton.add(join, BorderLayout.SOUTH);
+        statusSelection.setForeground(Color.BLACK);
+        statusSelection.addTab("Benutzer", scrollUser);
+        statusSelection.addTab("Räume", roomButton);
         status.setLayout(new BorderLayout());
-        status.add(statusAuswahl, BorderLayout.CENTER);
+        status.add(statusSelection, BorderLayout.CENTER);
         join.addActionListener(this);
 
         // Information
@@ -78,28 +78,28 @@ public class ClientView implements ActionListener {
         information.add(port);
         information.add(name);
 
-        // Panel-Überschriften
+        // Panel-Caption
         chatPanel.setBorder(BorderFactory.createTitledBorder("Chat"));
         status.setBorder(BorderFactory.createTitledBorder("Status"));
         information.setBorder(BorderFactory.createTitledBorder("Information"));
 
-        // Panel anordnen
+        // Panel-Arrangement
         controlPanel.setLayout(new BorderLayout());
         controlPanel.add(status, BorderLayout.CENTER);
         controlPanel.add(information, BorderLayout.NORTH);
         panel.add(chatPanel, BorderLayout.CENTER);
         panel.add(controlPanel, BorderLayout.EAST);
 
-        // hübsch aussehen
+        // Design
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                            ClientController.logout();
+                if (JOptionPane.showConfirmDialog(frame, "Beenden?", "Exit", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    ClientController.logout();
                     System.exit(0);
                 }
             }
@@ -109,30 +109,35 @@ public class ClientView implements ActionListener {
         frame.setVisible(true);
     }
 
-    // Nachricht ins Chatfenster schreiben
+    // display message to central window
     public void addMessage(String m) {
         chat.append(m + "\n");
     }
 
-    // Raumliste aktualisieren
+    // updater list of rooms
     public void setRooms(ArrayList<String> r) {
         rooms.setListData(r.toArray(new String[0]));
     }
 
-    // Nutzerliste aktualisieren
+    // updater list of users
     public void setUsers(ArrayList<String> u) {
         users.setListData(u.toArray(new String[0]));
     }
 
-    // Nutzernamen anzeigen
+    // display name of user
     public void setUserInformation(String userName) {
         name.setText("Angemeldet als: " + userName);
     }
 
-    // Serverinformationen anzeigen
+    // display server ip
     public void setServerInformation(int port, String ip) {
         server.setText("Server IP: " + ip);
         this.port.setText("Port: " + port);
+    }
+
+    // show alert
+    public void popUp(String msg) {
+        JOptionPane.showMessageDialog(frame, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
     }
 
     @Override
@@ -142,7 +147,7 @@ public class ClientView implements ActionListener {
                 String message = text.getText();
                 text.setText("");
                 ClientController.send(message);
-                addMessage("[" + ClientController.getClientname() + "]: " + message);
+                addMessage("[" + ClientController.getName() + "]: " + message);
 
                 break;
 
@@ -158,9 +163,5 @@ public class ClientView implements ActionListener {
             default:
                 break;
         }
-    }
-
-    public void popUp(String msg) {
-        JOptionPane.showMessageDialog(null, msg, "Verwarnung", JOptionPane.WARNING_MESSAGE);
     }
 }

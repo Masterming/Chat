@@ -21,7 +21,7 @@ public class ServerController {
     private static List<ClientHandler> users;
     private static Map<Integer, Room> rooms;
     private static int i;
-    private static ServerView gui;
+    private static ServerView view;
 
     private static SQLSocket sql;
 
@@ -35,9 +35,9 @@ public class ServerController {
         // Make an ArrayList to hold all user objects
         users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
-        rooms.put(0, new Room("Eingangshalle Meep", false));
-        gui = new ServerView();
-        updategui();
+        rooms.put(0, new Room("Lobby", false));
+        view = new ServerView();
+        updateView();
 
         // gui.setInformationRoom();
 
@@ -98,7 +98,7 @@ public class ServerController {
     public static List<ClientHandler> getUsers() {
         List<ClientHandler> loggedUsers = new ArrayList<>();
         for (ClientHandler u : users) {
-            if (u.getlogged()) {
+            if (u.getLogged()) {
                 loggedUsers.add(u);
             }
         }
@@ -119,10 +119,10 @@ public class ServerController {
         }
     }
 
-    public static void updategui() {
+    public static void updateView() {
 
-        gui.setRooms(rooms);
-        gui.setUsers(getUsers());
+        view.setRooms(rooms);
+        view.setUsers(getUsers());
 
         ArrayList<String> tmpList_r = new ArrayList<>();
         for (Room r : rooms.values()) {
@@ -132,7 +132,7 @@ public class ServerController {
         for (ClientHandler c : getUsers()) {
             ArrayList<String> tmpList_u = new ArrayList<>();
             for (ClientHandler d : getRoom(c.roomID).getUsers()) {
-                tmpList_u.add(d.getname());
+                tmpList_u.add(d.getName());
 
             }
             c.updateR(tmpList_r);
@@ -143,17 +143,17 @@ public class ServerController {
 
     public static void changeRoom(String r_name, ClientHandler user) {
         rooms.get(user.roomID).removeUser(user);
-        
+
         for (Room r : rooms.values()) {
-            if(r_name.equals(r.getName())){
+            if (r_name.equals(r.getName())) {
                 // System.out.println(user.roomID);
                 user.roomID = r.getId();
                 // System.out.println(user.roomID);
             }
         }
-       
+
         rooms.get(user.roomID).addUser(user);
-        updategui();
+        updateView();
     }
 
     public static Room getRoom(int roomID) {
@@ -167,55 +167,59 @@ public class ServerController {
     public static void addroom(Room new_room) {
         if (!rooms.containsValue(new_room)) {
             rooms.put(new_room.getId(), new_room);
-            displayMessage(Level.INFO, "[System]: Raum \""+new_room.getName()+ "\" erstellt");
-            updategui();
+            displayMessage(Level.INFO, "[System]: Raum \"" + new_room.getName() + "\" erstellt");
+            updateView();
         }
     }
 
     public static void deleteRoom(int room_id) {
-        if (rooms.get(room_id).isEditable()) { 
+        if (rooms.get(room_id).isEditable()) {
             for (ClientHandler c : rooms.get(room_id).getUsers()) {
-                changeRoom("Eingangshalle Meep", c);
+                changeRoom("Lobby", c);
             }
             rooms.remove(room_id);
             displayMessage(Level.INFO, "[System]: Raum" + room_id + " entfernt");
-            updategui();
+            updateView();
         }
     }
 
     public static void editRoom(int id, String name) {
         if (getRoom(id).isEditable()) {
             getRoom(id).setName(name);
-            updategui();
-            displayMessage(Level.INFO, "[System]: Raum "+ id+ " umbenannt zu: "+ name);
+            updateView();
+            displayMessage(Level.INFO, "[System]: Raum " + id + " umbenannt zu: " + name);
         } else {
             displayMessage(Level.WARNING, "[System]: Raum nicht editierbar");
         }
     }
 
     public static void displayMessage(Level lvl, String msg) {
-        LOGGER.log(lvl, msg );
-        gui.addMessage(msg);
+        LOGGER.log(lvl, msg);
+        view.addMessage(msg);
     }
-    public static void warnUser(String msg, ClientHandler c){
-        displayMessage(Level.WARNING, "[System]: Benutzerverwarnung an "+c.getname()+": \""+ msg+"\"");
+
+    public static void warnUser(String msg, ClientHandler c) {
+        displayMessage(Level.WARNING, "[System]: Benutzerverwarnung an " + c.getName() + ": \"" + msg + "\"");
         c.write(new Message(MsgCode.WARNING, msg));
     }
-    public static void kickUser(ClientHandler c){
-        displayMessage(Level.WARNING, "[System]: Benutzerkick für: "+ c.getname());
+
+    public static void kickUser(ClientHandler c) {
+        displayMessage(Level.WARNING, "[System]: Benutzerkick für: " + c.getName());
 
         leaveRoom(c);
         c.write(new Message(MsgCode.KICK, ""));
-        updategui();
+        updateView();
     }
-    public static void banUser(ClientHandler c){
-        displayMessage(Level.WARNING, "[System]: Benutzerbann für: "+ c.getname());
+
+    public static void banUser(ClientHandler c) {
+        displayMessage(Level.WARNING, "[System]: Benutzerbann für: " + c.getName());
         leaveRoom(c);
-        sql.ban(c.getname());
+        sql.ban(c.getName());
         c.write(new Message(MsgCode.BAN, ""));
-        updategui();
+        updateView();
     }
-    public static void leaveRoom(ClientHandler c){
+
+    public static void leaveRoom(ClientHandler c) {
         rooms.get(c.roomID).removeUser(c);
     }
 }

@@ -40,10 +40,10 @@ public class HtmlFormatter extends Formatter {
         return buf.toString();
     }
 
-    private String calcDate(long millisecs) {
+    private String calcDate(long ms) {
         SimpleDateFormat date_format = new SimpleDateFormat("MMM dd,yyyy HH:mm");
-        Date resultdate = new Date(millisecs);
-        return date_format.format(resultdate);
+        Date date = new Date(ms);
+        return date_format.format(date);
     }
 
     // this method is called just after the handler using this
@@ -54,7 +54,7 @@ public class HtmlFormatter extends Formatter {
                 + "td { font:normal 10pt Tahoma; }\n" + "h1 {font:normal 11pt Tahoma;}\n" + "</style>\n" + "</head>\n"
                 + "<body>\n" + "<h1>" + (new Date()) + "</h1>\n"
                 + "<table border=\"0\" cellpadding=\"5\" cellspacing=\"3\">\n" + "<tr align=\"left\">\n"
-                + "\t<th style=\"width:10%\">Loglevel</th>\n" + "\t<th style=\"width:15%\">Time</th>\n"
+                + "\t<th style=\"width:10%\">LogLevel</th>\n" + "\t<th style=\"width:15%\">Time</th>\n"
                 + "\t<th style=\"width:75%\">Log Message</th>\n" + "</tr>\n";
     }
 

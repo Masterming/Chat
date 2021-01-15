@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        recieve();
+        receive();
     }
 
     public void write(Message msg) {
@@ -60,7 +60,7 @@ public class ClientHandler implements Runnable {
         return msg;
     }
 
-    private void recieve() {
+    private void receive() {
         // blocking
         running = true;
 
@@ -80,9 +80,9 @@ public class ClientHandler implements Runnable {
                         if (login(password)) {
                             logged = true;
                             ServerController.getRoom(roomID).addUser(this);
-                            ServerController.updategui();
-                            sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-                            ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected\n");
+                            ServerController.updateView();
+                            sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected"));
+                            ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected");
                         }
                         break;
 
@@ -106,22 +106,22 @@ public class ClientHandler implements Runnable {
                         write(new Message(MsgCode.GET_ACTIVE, active.toString()));
                         break;
 
-
                     case CHANGE_ROOM:
                         ServerController.changeRoom(msg.content, this);
-                        sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected\n"));
-                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " connected to "+msg.content);
+                        sendToRoom(new Message(MsgCode.MESSAGE, "[System]: " + name + " connected"));
+                        ServerController.displayMessage(Level.INFO,
+                                "[System]: " + name + " connected to " + msg.content);
                         break;
 
                     case LOGOUT:
-                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " disconnected\n");
+                        ServerController.displayMessage(Level.INFO, "[System]: " + name + " disconnected");
                         close();
                         return;
 
                     default:
                         break;
                 }
-            } catch (IOException |NullPointerException e) {
+            } catch (IOException | NullPointerException e) {
                 ServerController.displayMessage(Level.SEVERE, e.getMessage());
                 close();
             }
@@ -157,8 +157,8 @@ public class ClientHandler implements Runnable {
 
         // check if username exists
         for (ClientHandler c : ServerController.getUsers()) {
-            if(username.equals(c.name))
-            return 4;            
+            if (username.equals(c.name))
+                return 4;
         }
         for (String un : ServerController.getSql().getAllUser()) {
             if (username.equals(un)) {
@@ -192,8 +192,8 @@ public class ClientHandler implements Runnable {
             ServerController.leaveRoom(this);
             running = false;
             try {
-                
-            ServerController.updategui();
+
+                ServerController.updateView();
                 input.close();
                 output.close();
                 socket.close();
@@ -204,7 +204,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public boolean getlogged() {
+    public boolean getLogged() {
         return logged;
     }
 
@@ -212,7 +212,7 @@ public class ClientHandler implements Runnable {
         return ("[" + ServerController.getRoom(roomID).getName() + "] " + name);
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
