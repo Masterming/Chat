@@ -16,14 +16,14 @@ public class SQLSocket {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.out.println("MYSQL-Driver not found");
+            LOGGER.log(Level.SEVERE, "MYSQL-Driver not found");
             return;
         }
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB", "root", "");
             // System.out.println("connected to sqlsocket");
         } catch (SQLException e) {
-            System.out.println("connection to sqlsocket failed:" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "connection to sqlsocket failed:" + e.getMessage());
         }
     }
 
@@ -35,7 +35,7 @@ public class SQLSocket {
                 System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
             }
         } catch (SQLException e) {
-            // System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ public class SQLSocket {
                 l.add(rs.getString(1));
             }
         } catch (SQLException e) {
-            // System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         return l;
     }
@@ -78,7 +78,7 @@ public class SQLSocket {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
             return -1;
         }
 
@@ -90,7 +90,7 @@ public class SQLSocket {
             stmt.executeUpdate("INSERT INTO `register`(`Name`, `Password`) VALUES (\"" + un + "\", \"" + pw + "\")");
             return true;
         } catch (SQLException e) {
-            // System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
             return false;
         }
     }
@@ -101,7 +101,7 @@ public class SQLSocket {
             stmt.executeUpdate("UPDATE register SET banned=1  WHERE Name=\"" + name + "\"");
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
             return false;
         }
     }

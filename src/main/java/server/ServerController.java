@@ -146,9 +146,9 @@ public class ServerController {
         
         for (Room r : rooms.values()) {
             if(r_name.equals(r.getName())){
-                System.out.println(user.roomID);
+                // System.out.println(user.roomID);
                 user.roomID = r.getId();
-                System.out.println(user.roomID);
+                // System.out.println(user.roomID);
             }
         }
        

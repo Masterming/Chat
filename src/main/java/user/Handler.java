@@ -59,7 +59,8 @@ public class Handler implements Runnable {
         while (running) {
             try {
                 Message msg = read();
-                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
                 switch (msg.type) {
                     case LOGIN:
                         break;
@@ -69,12 +70,12 @@ public class Handler implements Runnable {
                         ClientController.displayMessage(msg.content);
                         break;
                     case UPDATE_ROOMS:
-                        
+
                         ArrayList<String> tmp_r = parser.fromJson(msg.content, type);
                         ClientController.updateRooms(tmp_r);
                         break;
                     case UPDATE_USERS:
-                    
+
                         ArrayList<String> tmp_u = parser.fromJson(msg.content, type);
                         ClientController.updateUsers(tmp_u);
                         break;
@@ -99,18 +100,16 @@ public class Handler implements Runnable {
 
     private Message read() throws IOException {
         String json = input.readLine();
-        System.out.println(json);
+        // System.out.println(json);
         Message msg = parser.fromJson(json, Message.class);
-        
-        //System.out.println(msg);
-
+        System.out.println(msg);
         return msg;
     }
 
     public void write(Message msg) {
         String json = parser.toJson(msg);
-        //System.out.println(msg);
-        System.out.println(json);
+        System.out.println(msg);
+        //System.out.println(json);
         output.println(json);
         output.flush();
     }

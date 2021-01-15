@@ -25,7 +25,7 @@ public class ClientController {
 
     public static boolean login(String name, String pw) {
         logged = handler.login(name, pw);
-        System.out.println(logged);
+        // System.out.println(logged);
         if (logged) {
             gui = new ClientView();
             Thread t = new Thread(handler);
