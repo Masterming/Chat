@@ -40,17 +40,10 @@ und Verwaltung
 - möglichkeit des useren selber die verbindung sauber zu trennen
 
 # Meilenstein 3
+## Server:
+- Einführung einer Kommunikation über private Räume zwischen 2 Clients
 
-Der Server sollte mindestens folgende Anforderungen unterstützen:
-• Weiterentwicklung des Chatroom-Systems durch die Einführung einer Kommunikation über private Räume zwischen 2 Clients (siehe Anhang 1)
-• Bereitstellung von Mechanismen für Clients zur Verwaltung von privaten Räumen,
-wobei folgende Funktionalitäten vom Server bereitgestellt werden müssen:
-✔ Eröffnen eines privaten Raumes
-✔ Senden von Nachrichten von einem Client zum anderen Client
-✔ Schließen eines privaten Raumes
-Ein Client sollte mindestens die folgenden Anforderungen unterstützen:
-• Bereitstellen eines Dialogfensters sowie folgender Wahlmöglichkeiten zum Umgang
-mit privaten Räumen: (siehe Anhang 1)
-✔ Eröffnen eines privaten Raumes
-✔ Senden von Nachrichten von einem Client zum anderen Client
-✔ Schließen eines privaten Raumes
+## User:
+- Eröffnen eines privaten Raumes
+- Senden von Nachrichten von einem Client zum anderen Client
+- Schließen eines privaten Raumes
