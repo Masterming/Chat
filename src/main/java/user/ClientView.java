@@ -2,8 +2,6 @@ package user;
 
 import javax.swing.*;
 
-import org.graalvm.compiler.replacements.SnippetTemplate.UsageReplacer;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -170,11 +168,11 @@ public class ClientView implements ActionListener {
                 break;
             case "Privaten Chat starten":
                 if (users.getSelectedIndex() == -1) {
-                    addMessage("Bitte wähle erst einen Nutzer aus.");
-                } else {
+                    addMessage("Bitte wähle erst einen Nutzer aus.");    
+                } 
+                else {
                     String user = users.getSelectedValue();
-                    
-                    //Privaten Chat starten
+                    ClientController.startWhisper(user);
 
                 }
                 break;

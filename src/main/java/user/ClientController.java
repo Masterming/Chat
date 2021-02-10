@@ -72,5 +72,8 @@ public class ClientController {
     public static void displayLoginMessage(String content) {
         login_gui.loginFailedMsg(content);
     }
+    public static void startWhisper(String user){
+        handler.write(new Message(MsgCode.WHISPER, user));
+    }
 
 }

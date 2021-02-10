@@ -117,6 +117,11 @@ public class ClientHandler implements Runnable {
                         ServerController.displayMessage(Level.INFO, "[System]: " + name + " disconnected");
                         close();
                         return;
+                    
+                    case WHISPER:
+                        ServerController.createPrivate(this, msg.content);
+                        break;
+                        
 
                     default:
                         break;

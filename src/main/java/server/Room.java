@@ -8,15 +8,22 @@ public class Room {
     private CopyOnWriteArrayList<ClientHandler> users;
     private String name;
     private boolean editable;
+    private boolean visible;
     private static int id_count = 0;
 
-    public Room(String name, boolean editable) {
+    public Room(String name, boolean editable, boolean visible) {
         this.id = id_count;
         this.setName(name);
         users = new CopyOnWriteArrayList<>();
+        this.visible = visible;
         this.editable = editable;
         id_count++;
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
 
     public int getId() {
         return id;

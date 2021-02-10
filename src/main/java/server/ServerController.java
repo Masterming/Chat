@@ -35,7 +35,7 @@ public class ServerController {
         // Make an ArrayList to hold all user objects
         users = Collections.synchronizedList(new ArrayList<>(128));
         rooms = Collections.synchronizedMap(new HashMap<Integer, Room>(10));
-        rooms.put(0, new Room("Lobby", false));
+        rooms.put(0, new Room("Lobby", false, true));
         view = new ServerView();
         updateView();
 
@@ -126,7 +126,9 @@ public class ServerController {
 
         ArrayList<String> tmpList_r = new ArrayList<>();
         for (Room r : rooms.values()) {
-            tmpList_r.add(r.getName());
+            if (r.isVisible()) {
+                tmpList_r.add(r.getName());
+            }
         }
 
         for (ClientHandler c : getUsers()) {
@@ -152,6 +154,13 @@ public class ServerController {
             }
         }
 
+        rooms.get(user.roomID).addUser(user);
+        updateView();
+    }
+
+    public static void changeRoom(Room r, ClientHandler user) {
+        rooms.get(user.roomID).removeUser(user);
+        user.roomID = r.getId();
         rooms.get(user.roomID).addUser(user);
         updateView();
     }
@@ -221,5 +230,21 @@ public class ServerController {
 
     public static void leaveRoom(ClientHandler c) {
         rooms.get(c.roomID).removeUser(c);
+    }
+
+    public static void createPrivate(ClientHandler c, String d) {
+        Room room_tmp = new Room("Whisper", true, false);
+        rooms.put(room_tmp.getId(), room_tmp);
+        for (ClientHandler tmp : getUsers()) {
+            if (tmp.getName().equals(d)) {
+                changeRoom(room_tmp, c);
+                c.write(new Message(MsgCode.MESSAGE, "[System]: private connection to \""+tmp.getName()+"\""));
+                changeRoom(room_tmp, tmp);
+                tmp.write(new Message(MsgCode.MESSAGE, "[System]: private connection to \""+c.getName()+"\""));
+                displayMessage(Level.INFO, "[System]: privater raum erstellt");
+                break;
+            }
+        }
+        
     }
 }

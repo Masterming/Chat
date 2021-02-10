@@ -290,7 +290,7 @@ public class ServerView implements ActionListener, ListSelectionListener {
                 Boolean edit = editable.isSelected();
                 newRoom.setVisible(false);
 
-                ServerController.addroom(new Room(name, edit));
+                ServerController.addroom(new Room(name, edit, true));
 
             }
         } else if (e.getSource() == deleteRButton) {
