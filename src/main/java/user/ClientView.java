@@ -2,6 +2,8 @@ package user;
 
 import javax.swing.*;
 
+import org.graalvm.compiler.replacements.SnippetTemplate.UsageReplacer;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +28,9 @@ public class ClientView implements ActionListener {
     private JList<String> users;
     private JList<String> rooms;
     private JButton join;
+    private JButton pchat;
     private JPanel roomButton;
+    private JPanel userButton;
 
     public ClientView() {
 
@@ -47,7 +51,9 @@ public class ClientView implements ActionListener {
         rooms = new JList<>();
         users = new JList<>();
         join = new JButton("Beitreten");
+        pchat = new JButton("Privaten Chat starten");
         roomButton = new JPanel(new BorderLayout());
+        userButton = new JPanel(new BorderLayout());
 
         // Chatfenster
         chat.setEditable(false);
@@ -65,12 +71,15 @@ public class ClientView implements ActionListener {
         JScrollPane scrollRoom = new JScrollPane(rooms);
         roomButton.add(scrollRoom, BorderLayout.CENTER);
         roomButton.add(join, BorderLayout.SOUTH);
+        userButton.add(scrollUser, BorderLayout.CENTER);
+        userButton.add(pchat, BorderLayout.SOUTH);
         statusSelection.setForeground(Color.BLACK);
-        statusSelection.addTab("Benutzer", scrollUser);
+        statusSelection.addTab("Benutzer", userButton);
         statusSelection.addTab("Räume", roomButton);
         status.setLayout(new BorderLayout());
         status.add(statusSelection, BorderLayout.CENTER);
         join.addActionListener(this);
+        pchat.addActionListener(this);
 
         // Information
         information.setLayout(new GridLayout(2, 2));
@@ -157,6 +166,16 @@ public class ClientView implements ActionListener {
                 } else {
                     String room = rooms.getSelectedValue();
                     ClientController.changeRoom(room);
+                }
+                break;
+            case "Privaten Chat starten":
+                if (users.getSelectedIndex() == -1) {
+                    addMessage("Bitte wähle erst einen Nutzer aus.");
+                } else {
+                    String user = users.getSelectedValue();
+                    
+                    //Privaten Chat starten
+
                 }
                 break;
 
